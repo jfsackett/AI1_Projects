@@ -2,13 +2,15 @@ package ai1.squares.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import ai1.squares.model.Complexity;
 import ai1.squares.model.SearchMethod;
 import ai1.squares.model.SquaresPuzzleModel;
 import ai1.squares.view.SquaresPuzzleView;
 
-public class SquaresPuzzleController {
+public class SquaresPuzzleController implements PropertyChangeListener {
 
 	/** Puzzle model. */
 	SquaresPuzzleModel model;
@@ -38,6 +40,16 @@ public class SquaresPuzzleController {
 		
 		// Disable Search button initially.
 		view.getSearchButton().setEnabled(false);
+		// Add search button listener.
+		view.getSearchButton().addActionListener(new ActionListener() { 
+            @Override
+            public void actionPerformed(ActionEvent event) {
+            	model.search();
+            }
+		});
+		
+		// Register this controller as model event listener.
+		model.addPropertyChangeListener(this);
 	}
 	
 	/** Build action listeners for complexity radio buttons. */
@@ -60,4 +72,13 @@ public class SquaresPuzzleController {
 		};
 	}
 	
+	/** Handles property change events from model. */
+	public void propertyChange(PropertyChangeEvent event) {
+        String propertyName = event.getPropertyName();
+//        Object newValue = getComplexity.getNewValue();
+
+        if (propertyName.equalsIgnoreCase(SquaresPuzzleModel.COMPLEXITY) || propertyName.equalsIgnoreCase(SquaresPuzzleModel.SEARCH_METHOD)) {
+        	view.getSearchButton().setEnabled(model.getComplexity() != null && model.getSearchMethod() != null);
+        }
+    }
 }
