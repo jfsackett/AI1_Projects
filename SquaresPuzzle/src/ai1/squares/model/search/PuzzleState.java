@@ -13,25 +13,25 @@ public class PuzzleState {
 	public PuzzleState move(MoveDirection moveDirection) {
 		int spaceLoc = puzzleDigits.indexOf('0');
 		switch(moveDirection) {
-		case UP:
+		case DOWN:
 			// Top row?
 			if (spaceLoc / 3 == 0) {
 				return null;
 			}
 			return new PuzzleState(swapDigits(spaceLoc, spaceLoc - 3));
-		case DOWN:
+		case UP:
 			// Bottom row?
 			if (spaceLoc / 3 == 2) {
 				return null;
 			}
 			return new PuzzleState(swapDigits(spaceLoc, spaceLoc + 3));
-		case LEFT:
+		case RIGHT:
 			// Left column?
 			if (spaceLoc % 3 == 0) {
 				return null;
 			}
 			return new PuzzleState(swapDigits(spaceLoc, spaceLoc - 1));
-		case RIGHT:
+		case LEFT:
 			// Right column?
 			if (spaceLoc % 3 == 2) {
 				return null;
@@ -79,7 +79,7 @@ public class PuzzleState {
 
 	@Override
 	public String toString() {
-		return "PuzzleState [puzzleDigits=" + puzzleDigits + "]";
+		return puzzleDigits;
 	}
 
 }
