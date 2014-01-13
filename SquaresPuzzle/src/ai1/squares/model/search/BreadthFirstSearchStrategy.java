@@ -1,6 +1,7 @@
 package ai1.squares.model.search;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,11 +18,6 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 			return new SearchResult();
 		}
 		
-		// Check for start state equaling end state.
-		if (startPuzzleState.equals(endPuzzleState)) {
-			return new SearchResult(true, 0, 1, new ArrayList<PuzzleMove>());
-		}
-		
 		// Create queue of non-expanded puzzle states.
 		Queue<PuzzleMove> futurePuzzleMoves = new LinkedList<PuzzleMove>();
 		// Add start state.
@@ -32,22 +28,28 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 		// Add start state.
 		visitedPuzzleStates.add(startPuzzleState);
 		
+		int numStatesVisited = 0;
+		Date startTime = new Date();
+		
 		while (!futurePuzzleMoves.isEmpty())  {
+			numStatesVisited++;
 			// Remove head of queue.
 			PuzzleMove currPuzzleMove = futurePuzzleMoves.remove();
 			PuzzleState currPuzzleState = currPuzzleMove.getDestPuzzleState();
+			// End state?
+			if (currPuzzleState.equals(endPuzzleState)) {
+				long msecElapsed = new Date().getTime() - startTime.getTime();
+				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove, new ArrayList<PuzzleMove>());
+				printPuzzleMoves(solutionMoves);
+				return new SearchResult(true, msecElapsed, numStatesVisited, solutionMoves);
+			}
+			// Loop through moves from this state.
 			for (MoveDirection moveDirection : MoveDirection.values()) {
 				// Make move to next puzzle state.
 				PuzzleState nextPuzzleState = currPuzzleState.move(moveDirection);
 				// Check for move to illegal state.
 				if (nextPuzzleState == null) {
 					continue;
-				}
-				// Find end state?
-				if (nextPuzzleState.equals(endPuzzleState)) {
-					List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(new PuzzleMove(currPuzzleMove, moveDirection, nextPuzzleState), new ArrayList<PuzzleMove>());
-					printPuzzleMoves(solutionMoves);
-					return new SearchResult(true, 0, 1, solutionMoves);
 				}
 				// State already visited?
 				if (!visitedPuzzleStates.contains(nextPuzzleState)) {
@@ -59,7 +61,8 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 		}
 
 		// Unsuccessful search. "Can't get there from here."
-		return new SearchResult();
+		long msecElapsed = new Date().getTime() - startTime.getTime();
+		return new SearchResult(false, msecElapsed, numStatesVisited, new ArrayList<PuzzleMove>());
 	}
 
 	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove, List<PuzzleMove> resultList) {

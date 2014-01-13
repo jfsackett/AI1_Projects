@@ -14,6 +14,7 @@ public class SquaresPuzzleModel {
 	// Property change constants.
 	public static final String COMPLEXITY = "COMPLEXITY";
 	public static final String SEARCH_METHOD = "SEARCH_METHOD";
+	public static final String PUZZLE = "PUZZLE";
 	
 	// Default puzzle states.
 	public static final String EASY_PUZZLE = "134862705";
@@ -29,6 +30,9 @@ public class SquaresPuzzleModel {
 
 	/** Solution Search Method. */
 	private SearchMethod searchMethod;
+	
+	/** Puzzle to solve. */
+	private String puzzle;
 
 	public SquaresPuzzleModel() {
 		propChangeEventGen = new SwingPropertyChangeSupport(this);
@@ -45,6 +49,7 @@ public class SquaresPuzzleModel {
 	public void setComplexity(Complexity complexity) {
 		Complexity priorComplexity = this.complexity;
 		this.complexity = complexity;
+		setPuzzle(getDefaultPuzzleState());
 		propChangeEventGen.firePropertyChange(COMPLEXITY, priorComplexity, complexity);
 	}
 
@@ -58,35 +63,68 @@ public class SquaresPuzzleModel {
 		propChangeEventGen.firePropertyChange(SEARCH_METHOD, priorSearchMethod, searchMethod);
 	}
 
-	/** Perform the puzzle game search with the search method. */
-	public void search() {
-		if (complexity == null || searchMethod == null) {
+	public String getPuzzle() {
+		return puzzle;
+	}
+
+	public void setPuzzle(String puzzle) {
+		if (!isValidPuzzle(puzzle)) {
 			return;
 		}
+		this.puzzle = puzzle;
+		propChangeEventGen.firePropertyChange(PUZZLE, "", puzzle);
+	}
+	
+	/** Checks whether input is a valid puzzle configuration. */
+	public boolean isValidPuzzle(String puzzle) {
+		if (puzzle == null || puzzle.length() != 9) {
+			return false;
+		}
+		for (int ix = 0; ix < 9; ix++) {
+			if (!puzzle.contains("" + ix)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/** Checks whether current puzzle is a valid puzzle configuration. */
+	public boolean isValidPuzzle() {
+		return isValidPuzzle(this.puzzle);
+	}
+
+	/** Perform the puzzle game search with the search method. */
+	public SearchResult search() {
+		if (!isValidPuzzle(puzzle) || searchMethod == null) {
+			return null;
+		}
 		
-		PuzzleState startPuzzleState = getDefaultPuzzleState();
+		PuzzleState startPuzzleState = new PuzzleState(puzzle);
 
 		PuzzleState endPuzzleState = new PuzzleState(GOAL_PUZZLE);
 
 		SearchStrategy searchStrategy = new BreadthFirstSearchStrategy();
 		
-		SearchResult searchResult = searchStrategy.search(startPuzzleState, endPuzzleState);
-		
+		SearchResult searchResult = searchStrategy.search(startPuzzleState, endPuzzleState);		
 		System.out.println(searchResult);
+		
+		return searchResult;
 	}
 	
 	/** Returns the default easy, medium, hard puzzle states. */
-	private PuzzleState getDefaultPuzzleState() {
+	public String getDefaultPuzzleState() {
 		switch (complexity) {
 		case EASY:
-			return new PuzzleState(EASY_PUZZLE);
+			return EASY_PUZZLE;
 		case MEDIUM:
-			return new PuzzleState(MEDIUM_PUZZLE);
+			return MEDIUM_PUZZLE;
 		case HARD:
-			return new PuzzleState(HARD_PUZZLE);
+			return HARD_PUZZLE;
+		case CUSTOM:
+			return GOAL_PUZZLE;
 		default:
 			// Should not happen but least return something.
-			return new PuzzleState(GOAL_PUZZLE);
+			return GOAL_PUZZLE;
 		}
 	}
 	

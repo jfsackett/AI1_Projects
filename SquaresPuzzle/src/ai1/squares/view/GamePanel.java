@@ -15,37 +15,37 @@ public class GamePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	/** The game to be rendered. */
-	String game = "123804765";
+	String puzzle = "123804765";
+	
+	/** The Status text to display. */
+	String status = "";
 
-    public GamePanel() { //Bin bin) {
+    public GamePanel() {
 		super();
-//		this.bin = bin;
 	}
 
     /** Graphically render the bin and packed items. */
 	private void doDrawing(Graphics graphics) {
-		if (game.length() != 9) {
+		if (puzzle.length() != 9) {
 			return;
 		}
 		
         Graphics2D graphics2d = (Graphics2D) graphics;
         
-//    	BPGraphicsRenderer bpGraphicsRenderer = new BPGraphicsRenderer(graphics2d, 50, 50, this.getHeight());
-//
-//    	bpGraphicsRenderer.visit(bin);
-        
         graphics2d.setColor(Color.black);
         graphics2d.setFont(new Font("Sans Serif", Font.BOLD, 36));
         
-        for (int ix = 0; ix < game.length(); ix++) {
+        for (int ix = 0; ix < puzzle.length(); ix++) {
         	int xCoord = ix % 3 * 100 + 30;
         	int yCoord = ix / 3 * 100 + 30;
             graphics2d.drawRect(xCoord, yCoord, 100, 100);
-            if (game.charAt(ix) != '0') {
-            	graphics2d.drawString("" + game.charAt(ix), xCoord + 40, yCoord + 62);
+            if (puzzle.charAt(ix) != '0') {
+            	graphics2d.drawString("" + puzzle.charAt(ix), xCoord + 40, yCoord + 62);
             }
         }
 
+        graphics2d.setFont(new Font("Sans Serif", Font.PLAIN, 18));
+    	graphics2d.drawString(status, 30, 370);
     } 
 
 	/** Paint the component. */
@@ -53,5 +53,21 @@ public class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         doDrawing(g);
-    }    
+    }
+
+	public String getPuzzle() {
+		return puzzle;
+	}
+
+	public void setPuzzle(String puzzle) {
+		this.puzzle = puzzle;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}    
 }

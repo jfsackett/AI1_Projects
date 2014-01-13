@@ -11,6 +11,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import ai1.squares.model.Complexity;
 import ai1.squares.model.SearchMethod;
@@ -19,14 +20,11 @@ public class SquaresPuzzleView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private static String COMPLEXITY = "Complexity";
-//	private static String EASY = "Easy";
-//	private static String MEDIUM = "Medium";
-//	private static String HARD = "Hard";
-//	private static String CUSTOM = "Custom";
 	private static String SEARCH_METHOD = "Search Method";
-//	private static String BREADTH = "Breadth First";
-//	private static String DEPTH = "Depth First";
 
+	/** Game display panel. */
+	GamePanel gamePanel;
+	
 	/** Radio button selects easy puzzle. */
 	private JRadioButton easyRadioButton = new JRadioButton(Complexity.EASY.getName());
 	/** Radio button selects medium puzzle. */
@@ -35,6 +33,8 @@ public class SquaresPuzzleView extends JPanel {
 	private JRadioButton hardRadioButton = new JRadioButton(Complexity.HARD.getName());
 	/** Radio button selects custom puzzle. */
 	private JRadioButton customRadioButton = new JRadioButton(Complexity.CUSTOM.getName());
+	/** Entry field for custom game layout. */
+	private JTextField customTextField = new JTextField(9);
 
 	/** Radio button selects breadth-first search. */
 	private JRadioButton breadthRadioButton = new JRadioButton(SearchMethod.BREADTH.getName());
@@ -50,16 +50,18 @@ public class SquaresPuzzleView extends JPanel {
     }
     
 	/** Build the UI layout. */
-    private void buildUI() {        
-        JPanel gamePanel = new GamePanel();
+    private void buildUI() {
+        gamePanel = new GamePanel();
         
         JPanel complexityPanel = new JPanel();
-        complexityPanel.setLayout(new BoxLayout(complexityPanel, BoxLayout.Y_AXIS));
+        complexityPanel.setLayout(new BoxLayout(complexityPanel, BoxLayout.PAGE_AXIS));
         complexityPanel.setBorder(BorderFactory.createTitledBorder(COMPLEXITY));
         complexityPanel.add(easyRadioButton);
         complexityPanel.add(mediumRadioButton);
         complexityPanel.add(hardRadioButton);
         complexityPanel.add(customRadioButton);
+        complexityPanel.add(customTextField);
+        customTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE, customTextField.getPreferredSize().height));
         ButtonGroup complexityButtonGroup = new ButtonGroup();
         complexityButtonGroup.add(easyRadioButton);
         complexityButtonGroup.add(mediumRadioButton);
@@ -67,7 +69,7 @@ public class SquaresPuzzleView extends JPanel {
         complexityButtonGroup.add(customRadioButton);
 
         JPanel searchMethodPanel = new JPanel();
-        searchMethodPanel.setLayout(new BoxLayout(searchMethodPanel, BoxLayout.Y_AXIS));
+        searchMethodPanel.setLayout(new BoxLayout(searchMethodPanel, BoxLayout.PAGE_AXIS));
         searchMethodPanel.setBorder(BorderFactory.createTitledBorder(SEARCH_METHOD));
         searchMethodPanel.add(breadthRadioButton);
         searchMethodPanel.add(depthRadioButton);
@@ -76,11 +78,8 @@ public class SquaresPuzzleView extends JPanel {
         searchMethodButtonGroup.add(depthRadioButton);
 
         JPanel optionPanel = new JPanel(new GridLayout(0, 1));
-//        optionPane.setLayout(new BoxLayout(optionPane, BoxLayout.Y_AXIS));
         optionPanel.setBorder(BorderFactory.createEmptyBorder(25, 0, 20, 20));
-//        optionPane.add(Box.createHorizontalGlue());
         optionPanel.add(complexityPanel);
-//        optionPane.add(Box.createRigidArea(new Dimension(10, 0)));
         optionPanel.add(searchMethodPanel);
         
         searchButton.setPreferredSize(new Dimension(100, 30));
@@ -93,6 +92,10 @@ public class SquaresPuzzleView extends JPanel {
         add(optionPanel, BorderLayout.EAST);
         add(buttonPanel, BorderLayout.PAGE_END);
     }
+
+	public GamePanel getGamePanel() {
+		return gamePanel;
+	}
 
 	public JRadioButton getEasyRadioButton() {
 		return easyRadioButton;
@@ -108,6 +111,10 @@ public class SquaresPuzzleView extends JPanel {
 
 	public JRadioButton getCustomRadioButton() {
 		return customRadioButton;
+	}
+
+	public JTextField getCustomTextField() {
+		return customTextField;
 	}
 
 	public JRadioButton getBreadthRadioButton() {

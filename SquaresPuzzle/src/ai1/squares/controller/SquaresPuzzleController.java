@@ -5,9 +5,13 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import ai1.squares.model.Complexity;
 import ai1.squares.model.SearchMethod;
 import ai1.squares.model.SquaresPuzzleModel;
+import ai1.squares.model.search.SearchResult;
 import ai1.squares.view.SquaresPuzzleView;
 
 public class SquaresPuzzleController implements PropertyChangeListener {
@@ -33,6 +37,10 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 		view.getMediumRadioButton().addActionListener(buildComplexityActionListener(Complexity.MEDIUM));
 		view.getHardRadioButton().addActionListener(buildComplexityActionListener(Complexity.HARD));
 		view.getCustomRadioButton().addActionListener(buildComplexityActionListener(Complexity.CUSTOM));
+		// Disable and hide Custom puzzle field initially.
+		view.getCustomTextField().setEnabled(false);
+		view.getCustomTextField().setVisible(false);
+		view.getCustomTextField().getDocument().addDocumentListener(buildCustomDocumentListener());
             
 		// Add search method radio button action listeners.
 		view.getBreadthRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.BREADTH));
@@ -41,12 +49,7 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 		// Disable Search button initially.
 		view.getSearchButton().setEnabled(false);
 		// Add search button listener.
-		view.getSearchButton().addActionListener(new ActionListener() { 
-            @Override
-            public void actionPerformed(ActionEvent event) {
-            	model.search();
-            }
-		});
+		view.getSearchButton().addActionListener(buildSearchButtonActionListener());
 		
 		// Register this controller as model event listener.
 		model.addPropertyChangeListener(this);
@@ -57,7 +60,9 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 		return new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent event) {
-            	model.setComplexity(complexity);
+            	if (model.getComplexity() == null || !event.getActionCommand().equals(model.getComplexity().getName())) {            		
+            		model.setComplexity(complexity);
+            	}
             }
 		};
 	}
@@ -67,7 +72,49 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 		return new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent event) {
-            	model.setSearchMethod(searchMethod);
+            	if (model.getSearchMethod() == null || !event.getActionCommand().equals(model.getSearchMethod().getName())) {            		
+            		model.setSearchMethod(searchMethod);
+            	}
+            }
+		};
+	}
+	
+	/** Builds document listener for changes to custom puzzle field. */
+	private DocumentListener buildCustomDocumentListener() {
+		return new DocumentListener() { 
+            @Override
+            public void insertUpdate(DocumentEvent event) {
+            	checkUpdatePuzzleState();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent event) {
+            	checkUpdatePuzzleState();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent event) {
+            	checkUpdatePuzzleState();
+            }
+            private void checkUpdatePuzzleState() {
+            	if(model.isValidPuzzle(view.getCustomTextField().getText())) {
+            		model.setPuzzle(view.getCustomTextField().getText());
+            	}
+            	else {
+            		view.getSearchButton().setEnabled(false);
+            	}
+            }
+		};
+	}
+
+	/** Builds action listener for search button. */
+	private ActionListener buildSearchButtonActionListener() {
+		return new ActionListener() { 
+            @Override
+            public void actionPerformed(ActionEvent event) {
+            	view.getGamePanel().setStatus("Searching...");
+            	view.getGamePanel().repaint();
+            	SearchResult searchResult = model.search();
+            	view.getGamePanel().setStatus(searchResult.toString());
+            	view.getGamePanel().repaint();
             }
 		};
 	}
@@ -75,10 +122,25 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 	/** Handles property change events from model. */
 	public void propertyChange(PropertyChangeEvent event) {
         String propertyName = event.getPropertyName();
-//        Object newValue = getComplexity.getNewValue();
 
-        if (propertyName.equalsIgnoreCase(SquaresPuzzleModel.COMPLEXITY) || propertyName.equalsIgnoreCase(SquaresPuzzleModel.SEARCH_METHOD)) {
-        	view.getSearchButton().setEnabled(model.getComplexity() != null && model.getSearchMethod() != null);
+        if (propertyName.equalsIgnoreCase(SquaresPuzzleModel.COMPLEXITY)) {
+    		view.getCustomTextField().setEnabled(model.getComplexity() == Complexity.CUSTOM);
+    		view.getCustomTextField().setVisible(model.getComplexity() == Complexity.CUSTOM);
+        	// Change to Custom complexity? 
+    		if ((Complexity)event.getNewValue() == Complexity.CUSTOM) {
+    			// Default puzzle.
+    			model.setPuzzle(SquaresPuzzleModel.GOAL_PUZZLE);
+    			view.getCustomTextField().setText(SquaresPuzzleModel.GOAL_PUZZLE);
+    			view.getCustomTextField().requestFocus();
+    			view.getCustomTextField().selectAll();
+    		}
         }
+        else if(propertyName.equalsIgnoreCase(SquaresPuzzleModel.PUZZLE)) {
+        	view.getGamePanel().setPuzzle(model.getPuzzle());
+        }
+    	view.getSearchButton().setEnabled(model.isValidPuzzle() && model.getSearchMethod() != null);
+        
+    	view.getGamePanel().repaint();
+        view.revalidate();
     }
 }
