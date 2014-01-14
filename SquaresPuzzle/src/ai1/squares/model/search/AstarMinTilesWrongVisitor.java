@@ -5,13 +5,13 @@ import ai1.squares.model.PuzzleState;
 import ai1.squares.model.PuzzleStateVisitor;
 
 /** Visits puzzle states and finds the location to insert new state so list remains sorted by heuristic. */ 
-public class GreedyMinTilesWrongVisitor implements PuzzleStateVisitor {
+public class AstarMinTilesWrongVisitor implements PuzzleStateVisitor {
 	
 	/** Goal puzzle state. */
 	private PuzzleState goalPuzzleState;
 	
-	/** Number of tiles in place in new state. */
-	private int numTilesOutOfPlaceInNewPuzzleState;
+	/** A* heuristic value for new puzzle state. */
+	private int heuristicValueForNewPuzzleState;
 	
 	/** Found insertion location flag. */
 	private boolean foundLocation;
@@ -20,9 +20,10 @@ public class GreedyMinTilesWrongVisitor implements PuzzleStateVisitor {
 	private int insertIndex;
 	
 	/** Constructor. */
-	public GreedyMinTilesWrongVisitor(PuzzleState newPuzzleState, PuzzleState goalPuzzleState, int numFrontierStates) {
+	public AstarMinTilesWrongVisitor(PuzzleMove newPuzzleMove, PuzzleState goalPuzzleState, int numFrontierStates) {
 		this.goalPuzzleState = goalPuzzleState;
-		numTilesOutOfPlaceInNewPuzzleState = countNumTilesOutOfPlace(newPuzzleState);
+		int numTilesOutOfPlaceInNewPuzzleState = countNumTilesOutOfPlace(newPuzzleMove.getDestPuzzleState());
+		heuristicValueForNewPuzzleState = newPuzzleMove.getNumMovesFromStart() + numTilesOutOfPlaceInNewPuzzleState;
 		foundLocation = false;
 		insertIndex = numFrontierStates;
 	}
@@ -33,8 +34,10 @@ public class GreedyMinTilesWrongVisitor implements PuzzleStateVisitor {
 		PuzzleState puzzleState = puzzleMove.getDestPuzzleState();
 		// Compare to goal by counting the number of tiles out of place.
 		int numTilesOutOfPlace = countNumTilesOutOfPlace(puzzleState);
+		// Add to number of moves to get A* heuristic value.
+		int heuristicValue = puzzleMove.getNumMovesFromStart() + numTilesOutOfPlace;
 		// Is this the correct insertion location?
-		if (numTilesOutOfPlaceInNewPuzzleState >= numTilesOutOfPlace) {
+		if (heuristicValueForNewPuzzleState >= heuristicValue) {
 			// Yup, set found flag.
 			foundLocation = true;
 			return;

@@ -4,11 +4,12 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.event.SwingPropertyChangeSupport;
 
+import ai1.squares.model.search.AstarMinTilesWrongSearchStrategy;
 import ai1.squares.model.search.BreadthFirstSearchStrategy;
 import ai1.squares.model.search.DepthFirstSearchStrategy;
+import ai1.squares.model.search.GreedyMinTilesWrongSearchStrategy;
 import ai1.squares.model.search.SearchResult;
 import ai1.squares.model.search.SearchStrategy;
-import ai1.squares.model.search.GreedyMinTilesWrongSearchStrategy;
 
 /** Main model for Squares Puzzle. */
 public class SquaresPuzzleModel {
@@ -138,6 +139,8 @@ public class SquaresPuzzleModel {
 			return new DepthFirstSearchStrategy();
 		case GREEDY_MIN_TILES_WRONG:
 			return new GreedyMinTilesWrongSearchStrategy();
+		case ASTAR_MIN_TILES_WRONG:
+			return new AstarMinTilesWrongSearchStrategy();
 		default:
 			// Should not happen but least return something.
 			return new BreadthFirstSearchStrategy();

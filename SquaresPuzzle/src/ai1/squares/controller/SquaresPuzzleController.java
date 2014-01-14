@@ -47,6 +47,8 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 		view.getBreadthRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.BREADTH));
 		view.getDepthRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.DEPTH));
 		view.getGreedyMinTilesWrongRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.GREEDY_MIN_TILES_WRONG));
+		view.getAstarMinTilesWrongRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.ASTAR_MIN_TILES_WRONG));
+		view.getAstarMinDistanceRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.ASTAR_MIN_DISTANCE));
 		
 		// Disable Search button initially.
 		view.getSearchButton().setEnabled(false);

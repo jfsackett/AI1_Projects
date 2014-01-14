@@ -11,11 +11,15 @@ public class PuzzleMove {
 	/** Destination puzzle state. */
 	private PuzzleState destPuzzleState;
 
+	/** Number of moves to destination state. */
+	private int numMovesFromStart;
+
 	/** Constructor. */
 	public PuzzleMove(PuzzleMove priorPuzzleMove, MoveDirection moveDirection, PuzzleState destPuzzleState) {
 		this.priorPuzzleMove = priorPuzzleMove;
 		this.moveDirection = moveDirection;
 		this.destPuzzleState = destPuzzleState;
+		this.numMovesFromStart = (priorPuzzleMove == null) ? 0 : (priorPuzzleMove.getNumMovesFromStart() + 1);
 	}
 
 	/** Visitor pattern accept method. */
@@ -36,6 +40,11 @@ public class PuzzleMove {
 	/** Accessor. */
 	public PuzzleState getDestPuzzleState() {
 		return destPuzzleState;
+	}
+
+	/** Accessor. */
+	public int getNumMovesFromStart() {
+		return numMovesFromStart;
 	}
 
 	/** To string. */
