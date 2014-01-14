@@ -45,7 +45,7 @@ public class DepthFirstSearchStrategy implements SearchStrategy {
 			// End state?
 			if (currPuzzleState.equals(goalPuzzleState)) {
 				long msecElapsed = new Date().getTime() - startTime.getTime();
-				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove);
+				List<PuzzleMove> solutionMoves = reversePuzzleMoveLinks(currPuzzleMove);
 				printPuzzleMoves(solutionMoves);
 				return new SearchResult(true, msecElapsed, numStatesVisited, solutionMoves);
 			}
@@ -71,7 +71,7 @@ public class DepthFirstSearchStrategy implements SearchStrategy {
 		return new SearchResult(false, msecElapsed, numStatesVisited, new ArrayList<PuzzleMove>());
 	}
 
-	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove) {
+	private static List<PuzzleMove> reversePuzzleMoveLinks(PuzzleMove puzzleMove) {
 		List<PuzzleMove> resultList = new LinkedList<PuzzleMove>();
 		if (puzzleMove == null) {
 			return resultList;

@@ -41,7 +41,7 @@ public class PuzzleMove {
 	/** To string. */
 	@Override
 	public String toString() {
-		String dir = (moveDirection == null) ? "None:" : "" + moveDirection + ':';
+		String dir = (moveDirection == null) ? "Start:" : "" + moveDirection + ':';
 		return String.format("%1$-7s", dir) + destPuzzleState;
 	}
 	

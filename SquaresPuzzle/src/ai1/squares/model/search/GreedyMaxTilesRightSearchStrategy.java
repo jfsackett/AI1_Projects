@@ -14,8 +14,8 @@ import ai1.squares.model.MoveDirection;
 import ai1.squares.model.PuzzleMove;
 import ai1.squares.model.PuzzleState;
 
-/** Solves puzzle by using heuristic which minimizes tiles out of place. */
-public class TilesOutOfPlaceSearchStrategy implements SearchStrategy {
+/** Solves puzzle by using heuristic which maximize tiles in place. */
+public class GreedyMaxTilesRightSearchStrategy implements SearchStrategy {
 
 	/** Perform depth first search and return results info. */
 	public SearchResult search(PuzzleState startPuzzleState, PuzzleState goalPuzzleState) {
@@ -24,29 +24,28 @@ public class TilesOutOfPlaceSearchStrategy implements SearchStrategy {
 			return new SearchResult();
 		}
 		
-		// Create list of non-expanded puzzle states.
-		List<PuzzleMove> futurePuzzleMoves = new LinkedList<PuzzleMove>();
-		// Add start state.
-		futurePuzzleMoves.add(new PuzzleMove(null, null, startPuzzleState));
+		// Create list of frontier puzzle states. Will stay sorted by heuristic.
+		LinkedList<PuzzleMove> frontierPuzzleMoves = new LinkedList<PuzzleMove>();
+		// Add start state to frontier states.
+		frontierPuzzleMoves.add(new PuzzleMove(null, null, startPuzzleState));
 		
 		// Create set of visited states.
 		Set<PuzzleState> visitedPuzzleStates = new HashSet<PuzzleState>();
-		// Add start state.
+		// Add start state to visited states.
 		visitedPuzzleStates.add(startPuzzleState);
 		
 		int numStatesVisited = 0;
 		Date startTime = new Date();
 		
-		while (!futurePuzzleMoves.isEmpty())  {
+		while (!frontierPuzzleMoves.isEmpty())  {
 			numStatesVisited++;
-System.out.println("numStatesVisited- " + numStatesVisited + "  futurePuzzleMoves- " + futurePuzzleMoves.size());			
-			// Remove find and remove best move.
-			PuzzleMove currPuzzleMove = findRemoveBestPuzzleMove(futurePuzzleMoves, goalPuzzleState);
+			// Remove the best (first) move.
+			PuzzleMove currPuzzleMove = frontierPuzzleMoves.removeFirst();
 			PuzzleState currPuzzleState = currPuzzleMove.getDestPuzzleState();
 			// End state?
 			if (currPuzzleState.equals(goalPuzzleState)) {
 				long msecElapsed = new Date().getTime() - startTime.getTime();
-				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove);
+				List<PuzzleMove> solutionMoves = reversePuzzleMoveLinks(currPuzzleMove);
 				printPuzzleMoves(solutionMoves);
 				return new SearchResult(true, msecElapsed, numStatesVisited, solutionMoves);
 			}
@@ -60,9 +59,9 @@ System.out.println("numStatesVisited- " + numStatesVisited + "  futurePuzzleMove
 				}
 				// State already visited?
 				if (!visitedPuzzleStates.contains(nextPuzzleState)) {
-					// Nope, add to visited & future states.
+					// Nope, add to visited & frontier states.
 					visitedPuzzleStates.add(nextPuzzleState);
-					futurePuzzleMoves.add(new PuzzleMove(currPuzzleMove, moveDirection, nextPuzzleState));
+					insertIntoHeuristicSortedLoc(new PuzzleMove(currPuzzleMove, moveDirection, nextPuzzleState), goalPuzzleState, frontierPuzzleMoves);
 				}
 			}
 		}
@@ -72,20 +71,24 @@ System.out.println("numStatesVisited- " + numStatesVisited + "  futurePuzzleMove
 		return new SearchResult(false, msecElapsed, numStatesVisited, new ArrayList<PuzzleMove>());
 	}
 	
-	private static PuzzleMove findRemoveBestPuzzleMove(List<PuzzleMove> futurePuzzleMoves, PuzzleState goalPuzzleState) {
-		// Create visitor to iterate through and find the best puzzle move.
-		TilesOutOfPlaceVisitor visitor = new TilesOutOfPlaceVisitor(goalPuzzleState);
-		for (PuzzleMove puzzleMove : futurePuzzleMoves) {
-			puzzleMove.accept(visitor);
+	/** Insert new puzzle state into frontier list in sorted order by heuristic funtion. */
+	private static void insertIntoHeuristicSortedLoc(PuzzleMove newPuzzleMove, PuzzleState goalPuzzleState, LinkedList<PuzzleMove> frontierPuzzleMoves) {
+		GreedyMaxTilesRightVisitor visitor = new GreedyMaxTilesRightVisitor(newPuzzleMove.getDestPuzzleState(), goalPuzzleState, frontierPuzzleMoves.size());
+		Iterator<PuzzleMove> iterFrontierPuzzleMovesReverse = frontierPuzzleMoves.descendingIterator();
+		while (iterFrontierPuzzleMovesReverse.hasNext()) {
+			PuzzleMove puzzleMove = iterFrontierPuzzleMovesReverse.next();
+			visitor.visit(puzzleMove);
+			if (visitor.isFoundLocation()) {
+				frontierPuzzleMoves.add(visitor.getInsertIndex(), newPuzzleMove);
+				return;
+			}
 		}
-		// Remove the best move from moves list.
-		futurePuzzleMoves.remove(visitor.getBestPuzzleMove());
-		
-		return visitor.getBestPuzzleMove();
+		// Didn't find insertion location so append to beginning of list.
+		frontierPuzzleMoves.addFirst(newPuzzleMove);
 	}
-
-	//TODO Rename this method.
-	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove) {
+	
+	/** Return list of moves reversed from goal so in order. */
+	private static List<PuzzleMove> reversePuzzleMoveLinks(PuzzleMove puzzleMove) {
 		List<PuzzleMove> resultList = new LinkedList<PuzzleMove>();
 		if (puzzleMove == null) {
 			return resultList;
@@ -105,6 +108,7 @@ System.out.println("numStatesVisited- " + numStatesVisited + "  futurePuzzleMove
 		return resultList;
 	}
 
+	/** Print puzzle moves in list. */
 	public void printPuzzleMoves(List<PuzzleMove> puzzleMoves) {
 		for (PuzzleMove puzzleMove : puzzleMoves) {
 			System.out.println(puzzleMove);

@@ -22,6 +22,7 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 	/** Puzzle view. */
 	SquaresPuzzleView view;
 
+	/** Constructor. */
 	public SquaresPuzzleController(SquaresPuzzleModel model, SquaresPuzzleView view) {
 		this.model = model;
 		this.view = view;
@@ -45,7 +46,7 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 		// Add search method radio button action listeners.
 		view.getBreadthRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.BREADTH));
 		view.getDepthRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.DEPTH));
-		view.getMinTilesWrongRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.MIN_TILES_WRONG));
+		view.getGreedyMaxTilesRightRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.GREEDY_MAX_TILES_RIGHT));
 		
 		// Disable Search button initially.
 		view.getSearchButton().setEnabled(false);
@@ -113,6 +114,7 @@ public class SquaresPuzzleController implements PropertyChangeListener {
             public void actionPerformed(ActionEvent event) {
             	view.getGamePanel().setStatus("Searching...");
             	view.getGamePanel().repaint();
+            	//TODO Run as background thread.
             	SearchResult searchResult = model.search();
             	view.getGamePanel().setStatus(searchResult.toString());
             	view.getGamePanel().repaint();

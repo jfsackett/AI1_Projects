@@ -43,7 +43,7 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 			// End state?
 			if (currPuzzleState.equals(goalPuzzleState)) {
 				long msecElapsed = new Date().getTime() - startTime.getTime();
-				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove, new ArrayList<PuzzleMove>());
+				List<PuzzleMove> solutionMoves = reversePuzzleMoveLinks(currPuzzleMove, new ArrayList<PuzzleMove>());
 				printPuzzleMoves(solutionMoves);
 				return new SearchResult(true, msecElapsed, numStatesVisited, solutionMoves);
 			}
@@ -69,11 +69,11 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 		return new SearchResult(false, msecElapsed, numStatesVisited, new ArrayList<PuzzleMove>());
 	}
 
-	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove, List<PuzzleMove> resultList) {
+	private static List<PuzzleMove> reversePuzzleMoveLinks(PuzzleMove puzzleMove, List<PuzzleMove> resultList) {
 		if (puzzleMove == null) {
 			return resultList;
 		}
-		resultList = recursePuzzleMoveLinks(puzzleMove.getPriorPuzzleMove(), resultList);
+		resultList = reversePuzzleMoveLinks(puzzleMove.getPriorPuzzleMove(), resultList);
 		resultList.add(puzzleMove);
 		return resultList;
 	}
