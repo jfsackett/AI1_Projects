@@ -1,11 +1,13 @@
 package ai1.squares.model.search;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 
 import ai1.squares.model.MoveDirection;
@@ -13,19 +15,19 @@ import ai1.squares.model.PuzzleMove;
 import ai1.squares.model.PuzzleState;
 
 
-public class BreadthFirstSearchStrategy implements SearchStrategy {
+public class DepthFirstSearchStrategy implements SearchStrategy {
 
-	/** Perform breadth first search and return results info. */
+	/** Perform depth first search and return results info. */
 	public SearchResult search(PuzzleState startPuzzleState, PuzzleState goalPuzzleState) {
 		// Check for invalid input.
 		if (startPuzzleState == null || goalPuzzleState == null) {
 			return new SearchResult();
 		}
 		
-		// Create queue of non-expanded puzzle states.
-		Queue<PuzzleMove> futurePuzzleMoves = new LinkedList<PuzzleMove>();
+		// Create stack of non-expanded puzzle states.
+		Deque<PuzzleMove> futurePuzzleMoves = new ArrayDeque<PuzzleMove>();
 		// Add start state.
-		futurePuzzleMoves.add(new PuzzleMove(null, null, startPuzzleState));
+		futurePuzzleMoves.push(new PuzzleMove(null, null, startPuzzleState));
 		
 		// Create set of visited states.
 		Set<PuzzleState> visitedPuzzleStates = new HashSet<PuzzleState>();
@@ -37,13 +39,13 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 		
 		while (!futurePuzzleMoves.isEmpty())  {
 			numStatesVisited++;
-			// Remove head of queue.
-			PuzzleMove currPuzzleMove = futurePuzzleMoves.remove();
+			// Remove top of stack.
+			PuzzleMove currPuzzleMove = futurePuzzleMoves.pop();
 			PuzzleState currPuzzleState = currPuzzleMove.getDestPuzzleState();
 			// End state?
 			if (currPuzzleState.equals(goalPuzzleState)) {
 				long msecElapsed = new Date().getTime() - startTime.getTime();
-				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove, new ArrayList<PuzzleMove>());
+				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove);
 				printPuzzleMoves(solutionMoves);
 				return new SearchResult(true, msecElapsed, numStatesVisited, solutionMoves);
 			}
@@ -59,7 +61,7 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 				if (!visitedPuzzleStates.contains(nextPuzzleState)) {
 					// Nope, add to visited & future states.
 					visitedPuzzleStates.add(nextPuzzleState);
-					futurePuzzleMoves.add(new PuzzleMove(currPuzzleMove, moveDirection, nextPuzzleState));
+					futurePuzzleMoves.push(new PuzzleMove(currPuzzleMove, moveDirection, nextPuzzleState));
 				}
 			}
 		}
@@ -69,12 +71,23 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 		return new SearchResult(false, msecElapsed, numStatesVisited, new ArrayList<PuzzleMove>());
 	}
 
-	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove, List<PuzzleMove> resultList) {
+	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove) {
+		List<PuzzleMove> resultList = new LinkedList<PuzzleMove>();
 		if (puzzleMove == null) {
 			return resultList;
 		}
-		resultList = recursePuzzleMoveLinks(puzzleMove.getPriorPuzzleMove(), resultList);
-		resultList.add(puzzleMove);
+		// Use stack to reverse puzzle moves.
+		Deque<PuzzleMove> puzzleMoves = new ArrayDeque<PuzzleMove>();
+		while (puzzleMove != null) {
+			puzzleMoves.push(puzzleMove);
+			puzzleMove = puzzleMove.getPriorPuzzleMove();
+		}
+		// Iterate through stack, adding to list.
+		Iterator<PuzzleMove> iterPuzzleMoves = puzzleMoves.iterator();
+		while(iterPuzzleMoves.hasNext()) {
+			resultList.add(iterPuzzleMoves.next());
+		}
+		
 		return resultList;
 	}
 
@@ -83,5 +96,5 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 			System.out.println(puzzleMove);
 		}
 	}
-	
+
 }

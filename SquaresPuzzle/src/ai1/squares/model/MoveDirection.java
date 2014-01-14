@@ -1,4 +1,4 @@
-package ai1.squares.model.search;
+package ai1.squares.model;
 
 /** Puzzle Move Direction. */
 public enum MoveDirection {

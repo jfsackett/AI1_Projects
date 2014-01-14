@@ -5,9 +5,10 @@ import java.beans.PropertyChangeListener;
 import javax.swing.event.SwingPropertyChangeSupport;
 
 import ai1.squares.model.search.BreadthFirstSearchStrategy;
-import ai1.squares.model.search.PuzzleState;
+import ai1.squares.model.search.DepthFirstSearchStrategy;
 import ai1.squares.model.search.SearchResult;
 import ai1.squares.model.search.SearchStrategy;
+import ai1.squares.model.search.TilesOutOfPlaceSearchStrategy;
 
 /** Main model for Squares Puzzle. */
 public class SquaresPuzzleModel {
@@ -103,7 +104,7 @@ public class SquaresPuzzleModel {
 
 		PuzzleState endPuzzleState = new PuzzleState(GOAL_PUZZLE);
 
-		SearchStrategy searchStrategy = new BreadthFirstSearchStrategy();
+		SearchStrategy searchStrategy = getSearchStrategy();
 		
 		SearchResult searchResult = searchStrategy.search(startPuzzleState, endPuzzleState);		
 		System.out.println(searchResult);
@@ -112,7 +113,7 @@ public class SquaresPuzzleModel {
 	}
 	
 	/** Returns the default easy, medium, hard puzzle states. */
-	public String getDefaultPuzzleState() {
+	private String getDefaultPuzzleState() {
 		switch (complexity) {
 		case EASY:
 			return EASY_PUZZLE;
@@ -125,6 +126,21 @@ public class SquaresPuzzleModel {
 		default:
 			// Should not happen but least return something.
 			return GOAL_PUZZLE;
+		}
+	}
+	
+	/** Returns the search strategy based on chosen method. */
+	private SearchStrategy getSearchStrategy() {
+		switch (searchMethod) {
+		case BREADTH:
+			return new BreadthFirstSearchStrategy();
+		case DEPTH:
+			return new DepthFirstSearchStrategy();
+		case MIN_TILES_WRONG:
+			return new TilesOutOfPlaceSearchStrategy();
+		default:
+			// Should not happen but least return something.
+			return new BreadthFirstSearchStrategy();
 		}
 	}
 	

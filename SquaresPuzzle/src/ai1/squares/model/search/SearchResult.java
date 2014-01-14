@@ -3,6 +3,8 @@ package ai1.squares.model.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import ai1.squares.model.PuzzleMove;
+
 /** Represents the completed execution of a puzzle solution. */
 public class SearchResult {
 	/** Success flag. */

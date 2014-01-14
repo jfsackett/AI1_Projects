@@ -1,12 +1,24 @@
-package ai1.squares.model.search;
+package ai1.squares.model;
 
 /** Represents a static puzzle state and offers movement to neighbor states. */
 public class PuzzleState {
 	/** Puzzle digits. */
-	String puzzleDigits;
+	private String puzzleDigits;
+	
+	/** Matrix representation of puzzle. */
+	private char[][] puzzleMatrix;
 
+	/** Constructor. */
 	public PuzzleState(String puzzleDigits) {
 		this.puzzleDigits = puzzleDigits;
+	}
+	
+	/** Build matrix representation of puzzle. */
+	public void buildPuzzleMatrix() {
+		puzzleMatrix = new char[3][3];
+		for (int ix = 0; ix < 9; ix++) {
+			puzzleMatrix[ix / 3][ix % 3] = puzzleDigits.charAt(ix);
+		}
 	}
 	
 	/** Make a puzzle move in the input direction; return null if impossible move. */
@@ -50,16 +62,24 @@ public class PuzzleState {
 		digits[loc2] = temp;
 		return new String(digits);
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((puzzleDigits == null) ? 0 : puzzleDigits.hashCode());
-		return result;
+	
+	/** Accessor. */
+	public String getPuzzleDigits() {
+		return puzzleDigits;
 	}
 
+	/** Accessor. */
+	public char[][] getPuzzleMatrix() {
+		return puzzleMatrix;
+	}
+
+	/** Hash Code. */
+	@Override
+	public int hashCode() {
+		return 37 * 1 + ((puzzleDigits == null) ? 0 : puzzleDigits.hashCode());
+	}
+
+	/** Equals. */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -77,6 +97,7 @@ public class PuzzleState {
 		return true;
 	}
 
+	/** To string. */
 	@Override
 	public String toString() {
 		return puzzleDigits;

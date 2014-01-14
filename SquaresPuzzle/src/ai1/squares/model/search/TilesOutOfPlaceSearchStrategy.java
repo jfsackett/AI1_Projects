@@ -1,29 +1,31 @@
 package ai1.squares.model.search;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 
 import ai1.squares.model.MoveDirection;
 import ai1.squares.model.PuzzleMove;
 import ai1.squares.model.PuzzleState;
 
+/** Solves puzzle by using heuristic which minimizes tiles out of place. */
+public class TilesOutOfPlaceSearchStrategy implements SearchStrategy {
 
-public class BreadthFirstSearchStrategy implements SearchStrategy {
-
-	/** Perform breadth first search and return results info. */
+	/** Perform depth first search and return results info. */
 	public SearchResult search(PuzzleState startPuzzleState, PuzzleState goalPuzzleState) {
 		// Check for invalid input.
 		if (startPuzzleState == null || goalPuzzleState == null) {
 			return new SearchResult();
 		}
 		
-		// Create queue of non-expanded puzzle states.
-		Queue<PuzzleMove> futurePuzzleMoves = new LinkedList<PuzzleMove>();
+		// Create list of non-expanded puzzle states.
+		List<PuzzleMove> futurePuzzleMoves = new LinkedList<PuzzleMove>();
 		// Add start state.
 		futurePuzzleMoves.add(new PuzzleMove(null, null, startPuzzleState));
 		
@@ -37,13 +39,14 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 		
 		while (!futurePuzzleMoves.isEmpty())  {
 			numStatesVisited++;
-			// Remove head of queue.
-			PuzzleMove currPuzzleMove = futurePuzzleMoves.remove();
+System.out.println("numStatesVisited- " + numStatesVisited + "  futurePuzzleMoves- " + futurePuzzleMoves.size());			
+			// Remove find and remove best move.
+			PuzzleMove currPuzzleMove = findRemoveBestPuzzleMove(futurePuzzleMoves, goalPuzzleState);
 			PuzzleState currPuzzleState = currPuzzleMove.getDestPuzzleState();
 			// End state?
 			if (currPuzzleState.equals(goalPuzzleState)) {
 				long msecElapsed = new Date().getTime() - startTime.getTime();
-				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove, new ArrayList<PuzzleMove>());
+				List<PuzzleMove> solutionMoves = recursePuzzleMoveLinks(currPuzzleMove);
 				printPuzzleMoves(solutionMoves);
 				return new SearchResult(true, msecElapsed, numStatesVisited, solutionMoves);
 			}
@@ -68,13 +71,37 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 		long msecElapsed = new Date().getTime() - startTime.getTime();
 		return new SearchResult(false, msecElapsed, numStatesVisited, new ArrayList<PuzzleMove>());
 	}
+	
+	private static PuzzleMove findRemoveBestPuzzleMove(List<PuzzleMove> futurePuzzleMoves, PuzzleState goalPuzzleState) {
+		// Create visitor to iterate through and find the best puzzle move.
+		TilesOutOfPlaceVisitor visitor = new TilesOutOfPlaceVisitor(goalPuzzleState);
+		for (PuzzleMove puzzleMove : futurePuzzleMoves) {
+			puzzleMove.accept(visitor);
+		}
+		// Remove the best move from moves list.
+		futurePuzzleMoves.remove(visitor.getBestPuzzleMove());
+		
+		return visitor.getBestPuzzleMove();
+	}
 
-	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove, List<PuzzleMove> resultList) {
+	//TODO Rename this method.
+	private static List<PuzzleMove> recursePuzzleMoveLinks(PuzzleMove puzzleMove) {
+		List<PuzzleMove> resultList = new LinkedList<PuzzleMove>();
 		if (puzzleMove == null) {
 			return resultList;
 		}
-		resultList = recursePuzzleMoveLinks(puzzleMove.getPriorPuzzleMove(), resultList);
-		resultList.add(puzzleMove);
+		// Use stack to reverse puzzle moves.
+		Deque<PuzzleMove> puzzleMoves = new ArrayDeque<PuzzleMove>();
+		while (puzzleMove != null) {
+			puzzleMoves.push(puzzleMove);
+			puzzleMove = puzzleMove.getPriorPuzzleMove();
+		}
+		// Iterate through stack, adding to list.
+		Iterator<PuzzleMove> iterPuzzleMoves = puzzleMoves.iterator();
+		while(iterPuzzleMoves.hasNext()) {
+			resultList.add(iterPuzzleMoves.next());
+		}
+		
 		return resultList;
 	}
 
@@ -83,5 +110,5 @@ public class BreadthFirstSearchStrategy implements SearchStrategy {
 			System.out.println(puzzleMove);
 		}
 	}
-	
+
 }

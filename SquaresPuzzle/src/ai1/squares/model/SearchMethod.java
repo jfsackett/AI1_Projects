@@ -4,7 +4,8 @@ package ai1.squares.model;
 public enum SearchMethod {
 
 	BREADTH("Breadth First"),
-	DEPTH("Depth First");
+	DEPTH("Depth First"),
+	MIN_TILES_WRONG("A* Min Tiles Wrong");
 	
 	/** Search Method name. */
 	private String name;
