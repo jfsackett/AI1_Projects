@@ -5,13 +5,13 @@ import ai1.squares.model.PuzzleState;
 import ai1.squares.model.PuzzleStateVisitor;
 
 /** Visits puzzle states and finds the location to insert new state so list remains sorted by heuristic. */ 
-public class GreedyMaxTilesRightVisitor implements PuzzleStateVisitor {
+public class GreedyMinTilesWrongVisitor implements PuzzleStateVisitor {
 	
 	/** Goal puzzle state. */
 	private PuzzleState goalPuzzleState;
 	
 	/** Number of tiles in place in new state. */
-	private int numTilesInPlaceInNewPuzzleState;
+	private int numTilesOutOfPlaceInNewPuzzleState;
 	
 	/** Found insertion location flag. */
 	private boolean foundLocation;
@@ -20,9 +20,9 @@ public class GreedyMaxTilesRightVisitor implements PuzzleStateVisitor {
 	private int insertIndex;
 	
 	/** Constructor. */
-	public GreedyMaxTilesRightVisitor(PuzzleState newPuzzleState, PuzzleState goalPuzzleState, int numFrontierStates) {
+	public GreedyMinTilesWrongVisitor(PuzzleState newPuzzleState, PuzzleState goalPuzzleState, int numFrontierStates) {
 		this.goalPuzzleState = goalPuzzleState;
-		numTilesInPlaceInNewPuzzleState = countNumTilesInPlace(newPuzzleState);
+		numTilesOutOfPlaceInNewPuzzleState = countNumTilesOutOfPlace(newPuzzleState);
 		foundLocation = false;
 		insertIndex = numFrontierStates;
 	}
@@ -31,10 +31,10 @@ public class GreedyMaxTilesRightVisitor implements PuzzleStateVisitor {
 	public void visit(PuzzleMove puzzleMove) {
 		// Get the puzzle move's puzzle state.
 		PuzzleState puzzleState = puzzleMove.getDestPuzzleState();
-		// Compare to goal by counting the number of tiles in place.
-		int numTilesInPlace = countNumTilesInPlace(puzzleState);
+		// Compare to goal by counting the number of tiles out of place.
+		int numTilesOutOfPlace = countNumTilesOutOfPlace(puzzleState);
 		// Is this the correct insertion location?
-		if (numTilesInPlaceInNewPuzzleState <= numTilesInPlace) {
+		if (numTilesOutOfPlaceInNewPuzzleState >= numTilesOutOfPlace) {
 			// Yup, set found flag.
 			foundLocation = true;
 			return;
@@ -43,20 +43,20 @@ public class GreedyMaxTilesRightVisitor implements PuzzleStateVisitor {
 		insertIndex--;
 	}
 
-	/** Compare to goal by counting the number of tiles in place. */
-	public int countNumTilesInPlace(PuzzleState puzzleState) {
+	/** Compare to goal by counting the number of tiles out of place. */
+	public int countNumTilesOutOfPlace(PuzzleState puzzleState) {
 		// Retrieve string representations.
 		String compareDigits = puzzleState.getPuzzleDigits();
 		String goalDigits = goalPuzzleState.getPuzzleDigits();
 		// Loop through and count.
-		int numTilesInPlace = 0;
+		int numTilesOutOfPlace = 0;
 		for (int ix = 0; ix < goalDigits.length(); ix++) {
-			if (compareDigits.charAt(ix) == goalDigits.charAt(ix)) {
-				numTilesInPlace++;
+			if (compareDigits.charAt(ix) != goalDigits.charAt(ix)) {
+				numTilesOutOfPlace++;
 			}
 		}
 		
-		return numTilesInPlace;
+		return numTilesOutOfPlace;
 	}
 
 	/** Accessor. */

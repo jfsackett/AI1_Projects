@@ -14,10 +14,10 @@ import ai1.squares.model.MoveDirection;
 import ai1.squares.model.PuzzleMove;
 import ai1.squares.model.PuzzleState;
 
-/** Solves puzzle by using heuristic which maximize tiles in place. */
-public class GreedyMaxTilesRightSearchStrategy implements SearchStrategy {
+/** Solves puzzle by using heuristic which minimizes tiles out of place. */
+public class GreedyMinTilesWrongSearchStrategy implements SearchStrategy {
 
-	/** Perform depth first search and return results info. */
+	/** Perform greedy search by minimizing # tiles out of place and return results info. */
 	public SearchResult search(PuzzleState startPuzzleState, PuzzleState goalPuzzleState) {
 		// Check for invalid input.
 		if (startPuzzleState == null || goalPuzzleState == null) {
@@ -73,12 +73,16 @@ public class GreedyMaxTilesRightSearchStrategy implements SearchStrategy {
 	
 	/** Insert new puzzle state into frontier list in sorted order by heuristic funtion. */
 	private static void insertIntoHeuristicSortedLoc(PuzzleMove newPuzzleMove, PuzzleState goalPuzzleState, LinkedList<PuzzleMove> frontierPuzzleMoves) {
-		GreedyMaxTilesRightVisitor visitor = new GreedyMaxTilesRightVisitor(newPuzzleMove.getDestPuzzleState(), goalPuzzleState, frontierPuzzleMoves.size());
+		// Create visitor to iterate over frontier list, looking for insertion location.
+		GreedyMinTilesWrongVisitor visitor = new GreedyMinTilesWrongVisitor(newPuzzleMove.getDestPuzzleState(), goalPuzzleState, frontierPuzzleMoves.size());
+		// Iterate backward through list because insertion location more likely to be near end.
 		Iterator<PuzzleMove> iterFrontierPuzzleMovesReverse = frontierPuzzleMoves.descendingIterator();
 		while (iterFrontierPuzzleMovesReverse.hasNext()) {
 			PuzzleMove puzzleMove = iterFrontierPuzzleMovesReverse.next();
 			visitor.visit(puzzleMove);
+			// Found insertion location?
 			if (visitor.isFoundLocation()) {
+				// Add at found location.
 				frontierPuzzleMoves.add(visitor.getInsertIndex(), newPuzzleMove);
 				return;
 			}

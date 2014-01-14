@@ -41,7 +41,7 @@ public class SquaresPuzzleView extends JPanel {
 	/** Radio button selects depth-first search. */
 	private JRadioButton depthRadioButton = new JRadioButton(SearchMethod.DEPTH.getName());
 	/** Radio button selects A* minimize incorrect tiles search. */
-	private JRadioButton greedyMaxTilesRightRadioButton = new JRadioButton(SearchMethod.GREEDY_MAX_TILES_RIGHT.getName());
+	private JRadioButton greedyMinTilesWrongRadioButton = new JRadioButton(SearchMethod.GREEDY_MIN_TILES_WRONG.getName());
 	
 	/** Start search button. */
 	private JButton searchButton = new JButton("Search");
@@ -75,11 +75,11 @@ public class SquaresPuzzleView extends JPanel {
         searchMethodPanel.setBorder(BorderFactory.createTitledBorder(SEARCH_METHOD));
         searchMethodPanel.add(breadthRadioButton);
         searchMethodPanel.add(depthRadioButton);
-        searchMethodPanel.add(greedyMaxTilesRightRadioButton);
+        searchMethodPanel.add(greedyMinTilesWrongRadioButton);
         ButtonGroup searchMethodButtonGroup = new ButtonGroup();
         searchMethodButtonGroup.add(breadthRadioButton);
         searchMethodButtonGroup.add(depthRadioButton);
-        searchMethodButtonGroup.add(greedyMaxTilesRightRadioButton);
+        searchMethodButtonGroup.add(greedyMinTilesWrongRadioButton);
 
         JPanel optionPanel = new JPanel(new GridLayout(0, 1));
         optionPanel.setBorder(BorderFactory.createEmptyBorder(25, 0, 20, 20));
@@ -133,8 +133,8 @@ public class SquaresPuzzleView extends JPanel {
 		return searchButton;
 	}
 
-	public JRadioButton getGreedyMaxTilesRightRadioButton() {
-		return greedyMaxTilesRightRadioButton;
+	public JRadioButton getGreedyMinTilesWrongRadioButton() {
+		return greedyMinTilesWrongRadioButton;
 	}
 
 }

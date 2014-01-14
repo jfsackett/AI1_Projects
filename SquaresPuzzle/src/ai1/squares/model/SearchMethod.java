@@ -5,7 +5,7 @@ public enum SearchMethod {
 
 	BREADTH("Breadth First"),
 	DEPTH("Depth First"),
-	GREEDY_MAX_TILES_RIGHT("Greedy Max Right");
+	GREEDY_MIN_TILES_WRONG("Greedy Min Wrong");
 	
 	/** Search Method name. */
 	private String name;
