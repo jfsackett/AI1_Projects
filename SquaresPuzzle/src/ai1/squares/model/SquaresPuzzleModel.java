@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.event.SwingPropertyChangeSupport;
 
+import ai1.squares.model.search.AstarMinDistanceSearchStrategy;
 import ai1.squares.model.search.AstarMinTilesWrongSearchStrategy;
 import ai1.squares.model.search.BreadthFirstSearchStrategy;
 import ai1.squares.model.search.DepthFirstSearchStrategy;
@@ -141,6 +142,8 @@ public class SquaresPuzzleModel {
 			return new GreedyMinTilesWrongSearchStrategy();
 		case ASTAR_MIN_TILES_WRONG:
 			return new AstarMinTilesWrongSearchStrategy();
+		case ASTAR_MIN_DISTANCE:
+			return new AstarMinDistanceSearchStrategy();
 		default:
 			// Should not happen but least return something.
 			return new BreadthFirstSearchStrategy();
