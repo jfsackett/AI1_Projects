@@ -8,10 +8,10 @@ import java.beans.PropertyChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import ai1.search.SearchResult;
 import ai1.squares.model.Complexity;
 import ai1.squares.model.SearchMethod;
 import ai1.squares.model.SquaresPuzzleModel;
-import ai1.squares.model.search.SearchResult;
 import ai1.squares.view.SquaresPuzzleView;
 
 public class SquaresPuzzleController implements PropertyChangeListener {

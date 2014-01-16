@@ -4,13 +4,12 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.event.SwingPropertyChangeSupport;
 
-import ai1.squares.model.search.AstarMinDistanceSearchStrategy;
-import ai1.squares.model.search.AstarMinTilesWrongSearchStrategy;
-import ai1.squares.model.search.BreadthFirstSearchStrategy;
-import ai1.squares.model.search.DepthFirstSearchStrategy;
-import ai1.squares.model.search.GreedyMinTilesWrongSearchStrategy;
-import ai1.squares.model.search.SearchResult;
-import ai1.squares.model.search.SearchStrategy;
+import ai1.search.BreadthFirstSearchStrategy;
+import ai1.search.DepthFirstSearchStrategy;
+import ai1.search.InformedSearchStrategy;
+import ai1.search.SearchAgent;
+import ai1.search.SearchResult;
+import ai1.search.SearchStrategy;
 
 /** Main model for Squares Puzzle. */
 public class SquaresPuzzleModel {
@@ -101,16 +100,24 @@ public class SquaresPuzzleModel {
 		if (!isValidPuzzle(puzzle) || searchMethod == null) {
 			return null;
 		}
-		
-		PuzzleState startPuzzleState = new PuzzleState(puzzle);
 
-		PuzzleState endPuzzleState = new PuzzleState(GOAL_PUZZLE);
+		// Echo to console.
+		System.out.println("Solve- " + puzzle + " to: " + GOAL_PUZZLE + " using " + searchMethod + '.');
 
-		SearchStrategy searchStrategy = getSearchStrategy();
+		// Build start & goal puzzle nodes.
+		PuzzleNode startPuzzleNode = new PuzzleNode(puzzle, null, null);
+		PuzzleNode goalPuzzleNode = new PuzzleNode(GOAL_PUZZLE, null, null);
+
+		// Build search agent with search strategy parameter.
+		SearchAgent searchAgent = new SearchAgent(getSearchStrategy(goalPuzzleNode));
 		
-		SearchResult searchResult = searchStrategy.search(startPuzzleState, endPuzzleState);		
+		// Do search.
+		SearchResult searchResult = searchAgent.search(startPuzzleNode, goalPuzzleNode);
+		
+		// Echo results to console.
+		searchAgent.printNodes(searchResult.getSolutionMoves());
 		System.out.println(searchResult);
-		
+
 		return searchResult;
 	}
 	
@@ -132,21 +139,21 @@ public class SquaresPuzzleModel {
 	}
 	
 	/** Returns the search strategy based on chosen method. */
-	private SearchStrategy getSearchStrategy() {
+	private SearchStrategy getSearchStrategy(PuzzleNode goalPuzzleNode) {
 		switch (searchMethod) {
 		case BREADTH:
 			return new BreadthFirstSearchStrategy();
 		case DEPTH:
 			return new DepthFirstSearchStrategy();
 		case GREEDY_MIN_TILES_WRONG:
-			return new GreedyMinTilesWrongSearchStrategy();
+			return new InformedSearchStrategy(new GreedyMinTilesWrongHeuristic(goalPuzzleNode));
 		case ASTAR_MIN_TILES_WRONG:
-			return new AstarMinTilesWrongSearchStrategy();
+			return new InformedSearchStrategy(new AstarMinTilesWrongHeuristic(goalPuzzleNode));
 		case ASTAR_MIN_DISTANCE:
-			return new AstarMinDistanceSearchStrategy();
+			return new InformedSearchStrategy(new AstarMinDistanceHeuristic(goalPuzzleNode));
 		default:
 			// Should not happen but least return something.
-			return new BreadthFirstSearchStrategy();
+			return new InformedSearchStrategy(new AstarMinTilesWrongHeuristic(goalPuzzleNode));
 		}
 	}
 	
