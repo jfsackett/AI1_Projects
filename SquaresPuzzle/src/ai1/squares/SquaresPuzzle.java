@@ -10,26 +10,36 @@ import ai1.squares.view.SquaresPuzzleView;
 public class SquaresPuzzle extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
+	// GUI display constants.
+	private static String TITLE = "8 Squares Puzzle";
+	private static int WIDTH = 650;
+	private static int HEIGHT = 500;
+	
+	/** MVC model. */
 	private SquaresPuzzleModel model;
 
+	/** MVC view. */
 	private SquaresPuzzleView view;
 
+	/** MVC controller. */
 	private SquaresPuzzleController controller;
 
+	/** Constructor. */
 	public SquaresPuzzle() {
 		model = new SquaresPuzzleModel();
 		view = new SquaresPuzzleView();
 		controller = new SquaresPuzzleController(model, view);
 		
-        setTitle("8 Squares Puzzle");
+        setTitle(TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
 		add(view);
         
-        setSize(600, 500);
+        setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
     }
 	
+	/** Main program. */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override

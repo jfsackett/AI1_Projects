@@ -1,17 +1,47 @@
 package ai1.search;
 
 
-/** This provides search utilizing a heuristic. Strategy patteern. */
-public class InformedSearchStrategy extends AbstractSearchStrategy {
+/** This extends heuristic informed search with iterative deepening. Strategy patteern. */
+public class IterDeepInformedSearchStrategy extends InformedSearchStrategy {
 
-	/** Pluggable heuristic strategy. Strategy pattern. */
-	protected HeuristicStrategy heuristicStrategy;
+	/** Search start node. */
+	private Node startNode;
+	
+	/** Depth threshold. */
+	private int depthThreshold;
+	
+	/** Flag indicating there are more nodes below threshold. */
+	private boolean moreBelowThreshold;
 	
 	/** Constructor. */
-	public InformedSearchStrategy(HeuristicStrategy heuristicStrategy) {
-		this.heuristicStrategy = heuristicStrategy;
+	public IterDeepInformedSearchStrategy(HeuristicStrategy heuristicStrategy, Node startNode) {
+		super(heuristicStrategy);
+		this.startNode = startNode;
+		depthThreshold = 1;
+		moreBelowThreshold = false;
 	}
 
+	/** More nodes on frontier? */
+	public boolean hasMoreNodes() {
+		if (!frontierNodes.isEmpty()) {
+			return true;
+		}
+		// No more nodes above threshold. Are there any below threshold?
+		if (!moreBelowThreshold) {
+			// No more anywhere.
+			return false;
+		}
+		
+		// More exist below threshold so reset initial search state.
+		frontierNodes.add(startNode);
+		frontierNodeSet.add(startNode);		
+		depthThreshold++;
+		moreBelowThreshold = false;
+		expandedNodes.clear();
+		
+		return true;
+	}
+	
 	/** Get next node from frontier. */
 	public Node getNext() {
 		// Get front node for expansion for breadth-first.
@@ -31,9 +61,14 @@ public class InformedSearchStrategy extends AbstractSearchStrategy {
 	
 	/** Add node to frontier. Must account for duplicate nodes on frontier by keeping only the one with lower estimated cost. */
 	public void add(Node newNode) {
-//System.out.println("expandedNodes.size()- " + expandedNodes.size() + "  frontierNodes.size()- " + frontierNodes.size());			
 		// Already expanded this node? 
 		if (expandedNodes.contains(newNode)) {
+			return;
+		}
+		
+		// Is this node below depth threshold?
+		if (newNode.getPathCost() > depthThreshold) {
+			moreBelowThreshold = true;
 			return;
 		}
 		

@@ -1,33 +1,27 @@
 package ai1.search;
 
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.Set;
 
 /** This provides mechanisms for breadth-first search. Strategy pattern. */
 public class BreadthFirstSearchStrategy extends AbstractSearchStrategy {
 
-	/** Unexpanded nodes on the frontier. */
-	ArrayList<Node> frontierNodes = new ArrayList<Node>();
-	
-	/** Expanded nodes already visited. */
-	Set<Node> expandedNodes = new HashSet<Node>();
-	
-	/** Constructor. */
-	public BreadthFirstSearchStrategy() {
-	}
-
-	/** More nodes on frontier? */
-	public boolean hasMoreNodes() {
-		return !frontierNodes.isEmpty();
-	}
-	
 	/** Get next node from frontier. */
 	public Node getNext() {
-		return (hasMoreNodes()) ? frontierNodes.remove(0) : null;
+		// Get front node for expansion for breadth-first.
+		Node expandNode = (hasMoreNodes()) ? frontierNodes.remove(0) : null;
+		if (expandNode == null) {
+			return expandNode;
+		}
+		
+		// Remove from frontier cache.
+		frontierNodeSet.remove(expandNode);
+		
+		// Add to expanded set.
+		expandedNodes.add(expandNode);
+		
+		return expandNode;
 	}
 	
-	/** Add node to frontier. Add to the end of list for breadth first. */
+	/** Add node to frontier if not already there.. Add to the end of list for breadth first. */
 	public void add(Node newNode) {
 		// Already expanded this node? 
 		if (expandedNodes.contains(newNode)) {
@@ -35,15 +29,15 @@ public class BreadthFirstSearchStrategy extends AbstractSearchStrategy {
 		}
 		
 		// Duplicate node in frontier nodes?
-		if (frontierNodes.contains(newNode)) {
+		if (frontierNodeSet.contains(newNode)) {
 			return;
 		}
 		
-		// Add to expanded set.
-		expandedNodes.add(newNode);
-		
-		// Add to the end of list for breadth first.
+		// Add to the end of list.
 		frontierNodes.add(newNode);
+		
+		// Add to frontier cache.
+		frontierNodeSet.add(newNode);		
 	}
 	
 }

@@ -40,15 +40,17 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 		view.getCustomRadioButton().addActionListener(buildComplexityActionListener(Complexity.CUSTOM));
 		// Disable and hide Custom puzzle field initially.
 		view.getCustomTextField().setEnabled(false);
-		view.getCustomTextField().setVisible(false);
 		view.getCustomTextField().getDocument().addDocumentListener(buildCustomDocumentListener());
             
 		// Add search method radio button action listeners.
-		view.getBreadthRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.BREADTH));
-		view.getDepthRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.DEPTH));
+		view.getBreadthFirstRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.BREADTH_FIRST));
+		view.getDepthFirstRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.DEPTH_FIRST));
+		view.getIterDeepRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.ITERATIVE_DEEPENING));
 		view.getGreedyMinTilesWrongRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.GREEDY_MIN_TILES_WRONG));
+		view.getGreedyMinDistanceRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.GREEDY_MIN_DISTANCE));
 		view.getAstarMinTilesWrongRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.ASTAR_MIN_TILES_WRONG));
 		view.getAstarMinDistanceRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.ASTAR_MIN_DISTANCE));
+		view.getAstarIterDeepRadioButton().addActionListener(buildSearchMethodActionListener(SearchMethod.ASTAR_ITERATIVE_DEEPENING));
 		
 		// Disable Search button initially.
 		view.getSearchButton().setEnabled(false);
@@ -130,7 +132,6 @@ public class SquaresPuzzleController implements PropertyChangeListener {
 
         if (propertyName.equalsIgnoreCase(SquaresPuzzleModel.COMPLEXITY)) {
     		view.getCustomTextField().setEnabled(model.getComplexity() == Complexity.CUSTOM);
-    		view.getCustomTextField().setVisible(model.getComplexity() == Complexity.CUSTOM);
         	// Change to Custom complexity? 
     		if ((Complexity)event.getNewValue() == Complexity.CUSTOM) {
     			// Default puzzle.

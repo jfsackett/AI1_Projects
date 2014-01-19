@@ -7,6 +7,8 @@ import javax.swing.event.SwingPropertyChangeSupport;
 import ai1.search.BreadthFirstSearchStrategy;
 import ai1.search.DepthFirstSearchStrategy;
 import ai1.search.InformedSearchStrategy;
+import ai1.search.IterDeepDepthFirstSearchStrategy;
+import ai1.search.IterDeepInformedSearchStrategy;
 import ai1.search.SearchAgent;
 import ai1.search.SearchResult;
 import ai1.search.SearchStrategy;
@@ -102,14 +104,14 @@ public class SquaresPuzzleModel {
 		}
 
 		// Echo to console.
-		System.out.println("Solve- " + puzzle + " to: " + GOAL_PUZZLE + " using " + searchMethod + '.');
+		System.out.println("Solve: " + puzzle + " to: " + GOAL_PUZZLE + " using " + searchMethod + '.');
 
 		// Build start & goal puzzle nodes.
 		PuzzleNode startPuzzleNode = new PuzzleNode(puzzle, null, null);
 		PuzzleNode goalPuzzleNode = new PuzzleNode(GOAL_PUZZLE, null, null);
 
 		// Build search agent with search strategy parameter.
-		SearchAgent searchAgent = new SearchAgent(getSearchStrategy(goalPuzzleNode));
+		SearchAgent searchAgent = new SearchAgent(getSearchStrategy(startPuzzleNode, goalPuzzleNode));
 		
 		// Do search.
 		SearchResult searchResult = searchAgent.search(startPuzzleNode, goalPuzzleNode);
@@ -139,18 +141,24 @@ public class SquaresPuzzleModel {
 	}
 	
 	/** Returns the search strategy based on chosen method. */
-	private SearchStrategy getSearchStrategy(PuzzleNode goalPuzzleNode) {
+	private SearchStrategy getSearchStrategy(PuzzleNode startPuzzleNode, PuzzleNode goalPuzzleNode) {
 		switch (searchMethod) {
-		case BREADTH:
+		case BREADTH_FIRST:
 			return new BreadthFirstSearchStrategy();
-		case DEPTH:
+		case DEPTH_FIRST:
 			return new DepthFirstSearchStrategy();
+		case ITERATIVE_DEEPENING:
+			return new IterDeepDepthFirstSearchStrategy(startPuzzleNode);
 		case GREEDY_MIN_TILES_WRONG:
 			return new InformedSearchStrategy(new GreedyMinTilesWrongHeuristic(goalPuzzleNode));
+		case GREEDY_MIN_DISTANCE:
+			return new InformedSearchStrategy(new GreedyMinDistanceHeuristic(goalPuzzleNode));
 		case ASTAR_MIN_TILES_WRONG:
 			return new InformedSearchStrategy(new AstarMinTilesWrongHeuristic(goalPuzzleNode));
 		case ASTAR_MIN_DISTANCE:
 			return new InformedSearchStrategy(new AstarMinDistanceHeuristic(goalPuzzleNode));
+		case ASTAR_ITERATIVE_DEEPENING:
+			return new IterDeepInformedSearchStrategy(new AstarMinDistanceHeuristic(goalPuzzleNode), startPuzzleNode);
 		default:
 			// Should not happen but least return something.
 			return new InformedSearchStrategy(new AstarMinTilesWrongHeuristic(goalPuzzleNode));
