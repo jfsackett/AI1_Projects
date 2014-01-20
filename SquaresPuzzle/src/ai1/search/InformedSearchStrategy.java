@@ -1,7 +1,7 @@
 package ai1.search;
 
 
-/** This provides search utilizing a heuristic. Strategy patteern. */
+/** This provides search utilizing a heuristic. Strategy pattern. */
 public class InformedSearchStrategy extends AbstractSearchStrategy {
 
 	/** Pluggable heuristic strategy. Strategy pattern. */
@@ -11,7 +11,8 @@ public class InformedSearchStrategy extends AbstractSearchStrategy {
 	public InformedSearchStrategy(HeuristicStrategy heuristicStrategy) {
 		this.heuristicStrategy = heuristicStrategy;
 	}
-
+static int fkdj = 0;
+	
 	/** Get next node from frontier. */
 	public Node getNext() {
 		// Get front node for expansion for breadth-first.
@@ -31,7 +32,6 @@ public class InformedSearchStrategy extends AbstractSearchStrategy {
 	
 	/** Add node to frontier. Must account for duplicate nodes on frontier by keeping only the one with lower estimated cost. */
 	public void add(Node newNode) {
-//System.out.println("expandedNodes.size()- " + expandedNodes.size() + "  frontierNodes.size()- " + frontierNodes.size());			
 		// Already expanded this node? 
 		if (expandedNodes.contains(newNode)) {
 			return;
@@ -43,14 +43,14 @@ public class InformedSearchStrategy extends AbstractSearchStrategy {
 		// Check for duplicate node in frontier nodes.
 		if (frontierNodeSet.contains(newNode)) {
 			int dupNodeIndex = frontierNodes.indexOf(newNode);
-			if (dupNodeIndex > 0) {
+			if (dupNodeIndex >= 0) {
 				Node dupNode = frontierNodes.get(dupNodeIndex);
 				// Keep node with lowest cost.
 				if (newNodeEstimatedCost < heuristicStrategy.estimateCost(dupNode)) {
 					// Remove higher cost node from frontier.
 					frontierNodes.remove(dupNodeIndex);
 					// Remove from frontier cache.
-					frontierNodeSet.remove(newNode);					
+					frontierNodeSet.remove(dupNode);					
 				}
 				else {
 					// Same node with equal or better cost already on frontier.

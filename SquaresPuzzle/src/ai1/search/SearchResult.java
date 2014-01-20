@@ -47,7 +47,7 @@ public class SearchResult {
 	@Override
 	public String toString() {
 		return (success ? "Success: " + (solutionMoves.size()-1) + " length; ": "Failure: ") +  
-				+ numNodesVisited + " visited; " + timeTaken + " msec";
+				+ numNodesVisited + " visited; " + timeTaken + " msec\n";
 	}
 	
 }

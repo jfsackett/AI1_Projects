@@ -19,7 +19,7 @@ public abstract class AbstractSearchStrategy implements SearchStrategy {
 	
 	/** More nodes on frontier? */
 	public boolean hasMoreNodes() {
-		return !frontierNodeSet.isEmpty();
+		return !frontierNodes.isEmpty();
 	}
 	
 	/** Get next node from frontier. */

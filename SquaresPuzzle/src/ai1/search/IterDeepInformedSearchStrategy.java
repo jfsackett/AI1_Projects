@@ -1,7 +1,7 @@
 package ai1.search;
 
 
-/** This extends heuristic informed search with iterative deepening. Strategy patteern. */
+/** This extends heuristic informed search with iterative deepening. Strategy pattern. */
 public class IterDeepInformedSearchStrategy extends InformedSearchStrategy {
 
 	/** Search start node. */
@@ -78,7 +78,7 @@ public class IterDeepInformedSearchStrategy extends InformedSearchStrategy {
 		// Check for duplicate node in frontier nodes.
 		if (frontierNodeSet.contains(newNode)) {
 			int dupNodeIndex = frontierNodes.indexOf(newNode);
-			if (dupNodeIndex > 0) {
+			if (dupNodeIndex >= 0) {
 				Node dupNode = frontierNodes.get(dupNodeIndex);
 				// Keep node with lowest cost.
 				if (newNodeEstimatedCost < heuristicStrategy.estimateCost(dupNode)) {
