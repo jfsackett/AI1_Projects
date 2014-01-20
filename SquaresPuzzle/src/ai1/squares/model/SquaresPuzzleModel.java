@@ -13,7 +13,7 @@ import ai1.search.SearchAgent;
 import ai1.search.SearchResult;
 import ai1.search.SearchStrategy;
 
-/** Main model for Squares Puzzle. */
+/** Main model for Squares Puzzle. Part of MVC pattern. */
 public class SquaresPuzzleModel {
 	// Property change constants.
 	public static final String COMPLEXITY = "COMPLEXITY";
@@ -38,63 +38,14 @@ public class SquaresPuzzleModel {
 	/** Puzzle to solve. */
 	private String puzzle;
 
+	/** Constructor. */
 	public SquaresPuzzleModel() {
 		propChangeEventGen = new SwingPropertyChangeSupport(this);
 	}
 	
+	/** Adds a listener to model change events. */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propChangeEventGen.addPropertyChangeListener(listener);
-	}
-
-	public Complexity getComplexity() {
-		return complexity;
-	}
-
-	public void setComplexity(Complexity complexity) {
-		Complexity priorComplexity = this.complexity;
-		this.complexity = complexity;
-		setPuzzle(getDefaultPuzzleState());
-		propChangeEventGen.firePropertyChange(COMPLEXITY, priorComplexity, complexity);
-	}
-
-	public SearchMethod getSearchMethod() {
-		return searchMethod;
-	}
-
-	public void setSearchMethod(SearchMethod searchMethod) {
-		SearchMethod priorSearchMethod = this.searchMethod;
-		this.searchMethod = searchMethod;
-		propChangeEventGen.firePropertyChange(SEARCH_METHOD, priorSearchMethod, searchMethod);
-	}
-
-	public String getPuzzle() {
-		return puzzle;
-	}
-
-	public void setPuzzle(String puzzle) {
-		if (!isValidPuzzle(puzzle)) {
-			return;
-		}
-		this.puzzle = puzzle;
-		propChangeEventGen.firePropertyChange(PUZZLE, "", puzzle);
-	}
-	
-	/** Checks whether input is a valid puzzle configuration. */
-	public boolean isValidPuzzle(String puzzle) {
-		if (puzzle == null || puzzle.length() != 9) {
-			return false;
-		}
-		for (int ix = 0; ix < 9; ix++) {
-			if (!puzzle.contains("" + ix)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/** Checks whether current puzzle is a valid puzzle configuration. */
-	public boolean isValidPuzzle() {
-		return isValidPuzzle(this.puzzle);
 	}
 
 	/** Perform the puzzle game search with the search method. */
@@ -165,4 +116,61 @@ public class SquaresPuzzleModel {
 		}
 	}
 	
+	/** Accessor. */
+	public Complexity getComplexity() {
+		return complexity;
+	}
+
+	/** Mutator. */
+	public void setComplexity(Complexity complexity) {
+		Complexity priorComplexity = this.complexity;
+		this.complexity = complexity;
+		setPuzzle(getDefaultPuzzleState());
+		propChangeEventGen.firePropertyChange(COMPLEXITY, priorComplexity, complexity);
+	}
+
+	/** Accessor. */
+	public SearchMethod getSearchMethod() {
+		return searchMethod;
+	}
+
+	/** Mutator. */
+	public void setSearchMethod(SearchMethod searchMethod) {
+		SearchMethod priorSearchMethod = this.searchMethod;
+		this.searchMethod = searchMethod;
+		propChangeEventGen.firePropertyChange(SEARCH_METHOD, priorSearchMethod, searchMethod);
+	}
+
+	/** Accessor. */
+	public String getPuzzle() {
+		return puzzle;
+	}
+
+	/** Mutator. */
+	public void setPuzzle(String puzzle) {
+		if (!isValidPuzzle(puzzle)) {
+			return;
+		}
+		this.puzzle = puzzle;
+		propChangeEventGen.firePropertyChange(PUZZLE, "", puzzle);
+	}
+	
+	/** Checks whether input is a valid puzzle configuration. */
+	public boolean isValidPuzzle(String puzzle) {
+		if (puzzle == null || puzzle.length() != 9) {
+			return false;
+		}
+		for (int ix = 0; ix < 9; ix++) {
+			if (!puzzle.contains("" + ix)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/** Checks whether current puzzle is a valid puzzle configuration. */
+	public boolean isValidPuzzle() {
+		return isValidPuzzle(this.puzzle);
+	}
+
 }

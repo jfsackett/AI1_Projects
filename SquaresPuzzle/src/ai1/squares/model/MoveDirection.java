@@ -11,14 +11,17 @@ public enum MoveDirection {
 	/** Direction name. */
 	private String name;
 	
+	/** Constructor. */
 	MoveDirection(String name) {
         this.name = name;
     }
 	
+	/** Accessor. */
     public String getName() { 
     	return name; 
     }
     
+    /** Return string representation. */
 	@Override
 	public String toString() {
 		return getName();

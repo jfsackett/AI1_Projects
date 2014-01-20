@@ -24,10 +24,12 @@ public class PuzzleNode extends Node {
 		this.pathCost = (parentNode == null) ? 0 : parentNode.getPathCost() + 1;
 	}
 	
+	/** Returns string representation of move action. Abstract method of node. */
 	public String getAction() {
 		return (moveDirection == null) ? "Start:" : "" + moveDirection;
 	}
 	
+	/** Returns successor nodes. Abstract method of node. */
 	public List<Node> getSuccessorNodes() {
 		List<Node> successorNodes = new LinkedList<Node>();
 		

@@ -50,6 +50,7 @@ public class SquaresPuzzle extends JFrame {
         });
     }
 
+    /** Accessor. */
 	public SquaresPuzzleController getController() {
 		return controller;
 	}

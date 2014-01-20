@@ -11,7 +11,6 @@ public class InformedSearchStrategy extends AbstractSearchStrategy {
 	public InformedSearchStrategy(HeuristicStrategy heuristicStrategy) {
 		this.heuristicStrategy = heuristicStrategy;
 	}
-static int fkdj = 0;
 	
 	/** Get next node from frontier. */
 	public Node getNext() {

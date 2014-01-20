@@ -14,6 +14,7 @@ import ai1.squares.model.SearchMethod;
 import ai1.squares.model.SquaresPuzzleModel;
 import ai1.squares.view.SquaresPuzzleView;
 
+/** Application controller. Part of MVC pattern. */
 public class SquaresPuzzleController implements PropertyChangeListener {
 
 	/** Puzzle model. */

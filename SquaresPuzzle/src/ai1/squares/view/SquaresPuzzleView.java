@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import ai1.squares.model.Complexity;
 import ai1.squares.model.SearchMethod;
 
+/** View of MVC pattern. */
 public class SquaresPuzzleView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
@@ -55,6 +56,7 @@ public class SquaresPuzzleView extends JPanel {
 	/** Start search button. */
 	private JButton searchButton = new JButton("Search");
 	
+	/** Constructor. */
 	public SquaresPuzzleView() {
 		setLayout(new BorderLayout());
 		buildUI();

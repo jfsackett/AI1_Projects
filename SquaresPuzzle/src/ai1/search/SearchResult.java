@@ -14,6 +14,7 @@ public class SearchResult {
 	/** Solution list. */
 	List<Node> solutionMoves;
 
+	/** Constructor. */
 	public SearchResult() {
 		this.success = false;
 		this.timeTaken = 0;
@@ -21,6 +22,7 @@ public class SearchResult {
 		this.solutionMoves = new ArrayList<Node>();
 	}
 
+	/** Constructor. */
 	public SearchResult(boolean success, long timeTaken, long numNodesVisited, List<Node> solutionMoves) {
 		this.success = success;
 		this.timeTaken = timeTaken;
@@ -28,22 +30,27 @@ public class SearchResult {
 		this.solutionMoves = solutionMoves;
 	}
 
+	/** Accessor. */
 	public boolean isSuccess() {
 		return success;
 	}
 
+	/** Accessor. */
 	public long getTimeTaken() {
 		return timeTaken;
 	}
 
+	/** Accessor. */
 	public long getNumNodesVisited() {
 		return numNodesVisited;
 	}
 
+	/** Accessor. */
 	public List<Node> getSolutionMoves() {
 		return solutionMoves;
 	}
 
+	/** Return string representation. */
 	@Override
 	public String toString() {
 		return (success ? "Success: " + (solutionMoves.size()-1) + " length; ": "Failure: ") +  

@@ -15,14 +15,17 @@ public enum SearchMethod {
 	/** Search Method name. */
 	private String name;
 	
+	/** Constructor. */
 	SearchMethod(String name) {
         this.name = name;
     }
 	
+	/** Accessor. */
     public String getName() { 
     	return name; 
     }
     
+    /** To string. */
 	@Override
 	public String toString() {
 		return getName();

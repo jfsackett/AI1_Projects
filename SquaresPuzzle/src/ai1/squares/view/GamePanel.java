@@ -7,10 +7,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-/**
- * This class is responsible for rendering the game state to the graphics context.
- * @author Joseph Sackett
- */
+/** This is responsible for rendering the game state to the graphics context. */
 public class GamePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
@@ -20,6 +17,7 @@ public class GamePanel extends JPanel {
 	/** The Status text to display. */
 	String status = "";
 
+	/** Constructor. */
     public GamePanel() {
 		super();
 	}
@@ -55,19 +53,24 @@ public class GamePanel extends JPanel {
         doDrawing(g);
     }
 
+    /** Accessor. */
 	public String getPuzzle() {
 		return puzzle;
 	}
 
+    /** Mutator. */
 	public void setPuzzle(String puzzle) {
 		this.puzzle = puzzle;
 	}
 
+    /** Accessor. */
 	public String getStatus() {
 		return status;
 	}
 
+    /** Mutator. */
 	public void setStatus(String status) {
 		this.status = status;
 	}    
+	
 }
