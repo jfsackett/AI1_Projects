@@ -1,0 +1,78 @@
+*** The interface is primarily a graphical one.
+*** Below are the optimal solutions for each level of complexity.
+*** Many similar and sub-optimal results omitted for brevity.
+
+EASY
+
+Solve: 134862705 to: 123804765 using Breadth First.
+Start: 134862705
+Down:  134802765
+Left:  134820765
+Down:  130824765
+Right: 103824765
+Up:    123804765
+Success: 5 length; 40 visited; 1 msec
+
+*** Other EASY results omitted.
+
+MEDIUM
+
+Solve: 281043765 to: 123804765 using A* Iterative Deepening.
+Start: 281043765
+Down:  081243765
+Left:  801243765
+Left:  810243765
+Up:    813240765
+Right: 813204765
+Right: 813024765
+Down:  013824765
+Left:  103824765
+Up:    123804765
+Success: 9 length; 718 visited; 21 msec
+
+*** Other MEDIUM results omitted.
+
+HARD
+
+Solve: 567408321 to: 123804765 using A* Min Distance.
+Start: 567408321
+Up:    567428301
+Left:  567428310
+Down:  567420318
+Down:  560427318
+Right: 506427318
+Right: 056427318
+Up:    456027318
+Up:    456327018
+Left:  456327108
+Left:  456327180
+Down:  456320187
+Down:  450326187
+Right: 405326187
+Right: 045326187
+Up:    345026187
+Up:    345126087
+Left:  345126807
+Left:  345126870
+Down:  345120876
+Down:  340125876
+Right: 304125876
+Right: 034125876
+Up:    134025876
+Up:    134825076
+Left:  134825706
+Left:  134825760
+Down:  134820765
+Down:  130824765
+Right: 103824765
+Up:    123804765
+Success: 30 length; 749 visited; 34 msec
+
+*** Other HARD results omitted.
+
+IMPOSSIBLE
+
+Solve: 123456780 to: 123804765 using Iterative Deepening.
+Failure: 1819407 visited; 7563 msec
+
+*** Other IMPOSSIBLE results omitted.
