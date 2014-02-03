@@ -1,0 +1,194 @@
+*** Note that these test cases show output executed with the debug flag set.
+*** They could also be executed without debug output for brevity.
+
+> java ai1.battle.DanceBattle simple_win.txt -debug
+# Moves: 3
+# Turns: 2
+0 0
+0 1
+
+MIN:  from [2,0] no moves left for: MIN
+MAX:  from [1,2] move to [2,0] win for: MAX
+MIN:  from [1,1] no winning results for: MIN
+MAX:  from [0,1] move to [1,1] win for: MAX
+
+MAX:
+Win
+
+
+> java ai1.battle.DanceBattle simple_loss.txt -debug
+# Moves: 3
+# Turns: 1
+0 1
+
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [2,0] move to [0,0] win for: MAX
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [2,0] move to [0,0] win for: MIN
+MAX:  from [2,2] no winning results for: MAX
+MIN:  from [1,2] move to [2,2] win for: MIN
+MAX:  from [1,1] no winning results for: MAX
+MIN:  from [0,1] move to [1,1] win for: MIN
+
+MAX:
+Lose
+
+
+> java ai1.battle.DanceBattle fresh.txt -debug
+# Moves: 3
+# Turns: 0
+
+MIN:  from [2,0] no moves left for: MIN
+MAX:  from [1,2] move to [2,0] win for: MAX
+MIN:  from [1,1] no winning results for: MIN
+MAX:  from [0,1] move to [1,1] win for: MAX
+MAX:  from [1,0] no moves left for: MAX
+MIN:  from [2,1] move to [1,0] win for: MIN
+MIN:  from [1,0] no moves left for: MIN
+MAX:  from [2,1] move to [1,0] win for: MAX
+MIN:  from [2,2] no winning results for: MIN
+MAX:  from [0,2] move to [2,2] win for: MAX
+MIN:  from [0,0] no winning results for: MIN
+MAX:  from [0,-1] move to [0,0] win for: MAX
+
+MAX:
+Win
+
+
+> java ai1.battle.DanceBattle hard_win.txt -debug
+# Moves: 4
+# Turns: 2
+1 2
+2 3
+
+MAX:  from [3,3] no moves left for: MAX
+MIN:  from [1,3] move to [3,3] win for: MIN
+MAX:  from [1,1] no winning results for: MAX
+MIN:  from [0,1] move to [1,1] win for: MIN
+MAX:  from [2,2] no moves left for: MAX
+MIN:  from [0,2] move to [2,2] win for: MIN
+MAX:  from [0,0] no winning results for: MAX
+MIN:  from [3,0] move to [0,0] win for: MIN
+MIN:  from [2,2] no moves left for: MIN
+MAX:  from [0,2] move to [2,2] win for: MAX
+MIN:  from [3,3] no moves left for: MIN
+MAX:  from [0,3] move to [3,3] win for: MAX
+MIN:  from [0,0] no winning results for: MIN
+MAX:  from [1,0] move to [0,0] win for: MAX
+MAX:  from [2,2] no moves left for: MAX
+MIN:  from [0,2] move to [2,2] win for: MIN
+MAX:  from [3,3] no moves left for: MAX
+MIN:  from [0,3] move to [3,3] win for: MIN
+MAX:  from [0,0] no winning results for: MAX
+MIN:  from [1,0] move to [0,0] win for: MIN
+MAX:  from [1,1] no winning results for: MAX
+MIN:  from [3,1] move to [1,1] win for: MIN
+MAX:  from [1,3] no moves left for: MAX
+MIN:  from [1,1] move to [1,3] win for: MIN
+MIN:  from [1,3] no moves left for: MIN
+MAX:  from [0,1] move to [1,3] win for: MAX
+MIN:  from [2,2] no moves left for: MIN
+MAX:  from [0,2] move to [2,2] win for: MAX
+MIN:  from [0,0] no winning results for: MIN
+MAX:  from [3,0] move to [0,0] win for: MAX
+MAX:  from [2,2] no moves left for: MAX
+MIN:  from [0,2] move to [2,2] win for: MIN
+MIN:  from [0,3] no moves left for: MIN
+MAX:  from [0,0] move to [0,3] win for: MAX
+MIN:  from [2,2] no moves left for: MIN
+MAX:  from [0,2] move to [2,2] win for: MAX
+MAX:  from [0,3] no moves left for: MAX
+MIN:  from [1,0] move to [0,3] win for: MIN
+MIN:  from [2,2] no moves left for: MIN
+MAX:  from [0,2] move to [2,2] win for: MAX
+MAX:  from [0,3] no moves left for: MAX
+MIN:  from [0,0] move to [0,3] win for: MIN
+MAX:  from [2,2] no moves left for: MAX
+MIN:  from [0,2] move to [2,2] win for: MIN
+MIN:  from [0,3] no moves left for: MIN
+MAX:  from [1,0] move to [0,3] win for: MAX
+MIN:  from [1,1] no winning results for: MIN
+MAX:  from [3,1] move to [1,1] win for: MAX
+MIN:  from [3,3] no winning results for: MIN
+MAX:  from [2,3] move to [3,3] win for: MAX
+
+MAX:
+Win
+
+
+> java ai1.battle.DanceBattle hard_loss.txt -debug
+# Moves: 5
+# Turns: 6
+0 1
+1 2
+2 3
+3 0
+0 2
+2 2
+
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [4,0] move to [0,0] win for: MAX
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [4,0] move to [0,0] win for: MIN
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [4,0] move to [0,0] win for: MAX
+MIN:  from [4,4] no winning results for: MIN
+MAX:  from [3,4] move to [4,4] win for: MAX
+MIN:  from [3,3] no winning results for: MIN
+MAX:  from [1,3] move to [3,3] win for: MAX
+MIN:  from [1,1] no winning results for: MIN
+MAX:  from [4,1] move to [1,1] win for: MAX
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [4,0] move to [0,0] win for: MAX
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [4,0] move to [0,0] win for: MIN
+MAX:  from [4,4] no winning results for: MAX
+MIN:  from [1,4] move to [4,4] win for: MIN
+MAX:  from [1,1] no winning results for: MAX
+MIN:  from [3,1] move to [1,1] win for: MIN
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [4,0] move to [0,0] win for: MIN
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [4,0] move to [0,0] win for: MAX
+MIN:  from [4,4] no winning results for: MIN
+MAX:  from [1,4] move to [4,4] win for: MAX
+MIN:  from [1,1] no winning results for: MIN
+MAX:  from [3,1] move to [1,1] win for: MAX
+MIN:  from [3,3] no winning results for: MIN
+MAX:  from [4,3] move to [3,3] win for: MAX
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [4,0] move to [0,0] win for: MIN
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [4,0] move to [0,0] win for: MAX
+MIN:  from [3,4] no winning results for: MIN
+MAX:  from [3,3] move to [3,4] win for: MAX
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [4,0] move to [0,0] win for: MIN
+MAX:  from [3,4] no winning results for: MAX
+MIN:  from [1,3] move to [3,4] win for: MIN
+MAX:  from [1,1] no winning results for: MAX
+MIN:  from [4,1] move to [1,1] win for: MIN
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [4,0] move to [0,0] win for: MIN
+MAX:  from [1,4] no winning results for: MAX
+MIN:  from [1,1] move to [1,4] win for: MIN
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [4,0] move to [0,0] win for: MAX
+MIN:  from [1,4] no winning results for: MIN
+MAX:  from [3,1] move to [1,4] win for: MAX
+MIN:  from [0,0] no moves left for: MIN
+MAX:  from [4,0] move to [0,0] win for: MAX
+MIN:  from [1,4] no winning results for: MIN
+MAX:  from [1,1] move to [1,4] win for: MAX
+MAX:  from [0,0] no moves left for: MAX
+MIN:  from [4,0] move to [0,0] win for: MIN
+MAX:  from [1,4] no winning results for: MAX
+MIN:  from [3,1] move to [1,4] win for: MIN
+MAX:  from [3,3] no winning results for: MAX
+MIN:  from [4,3] move to [3,3] win for: MIN
+MAX:  from [4,4] no winning results for: MAX
+MIN:  from [2,4] move to [4,4] win for: MIN
+MAX:  from [2,2] no winning results for: MAX
+
+MAX:
+Lose
