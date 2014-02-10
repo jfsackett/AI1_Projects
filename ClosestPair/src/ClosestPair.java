@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,15 +18,20 @@ public class ClosestPair {
 	
 	/** Constructor. */
 	public ClosestPair(String inputFileName) {
-		List<Point> points = readPoints(inputFileName);
+		List<Point> pointsList = readPoints(inputFileName);
+		Point[] points = pointsList.toArray(new Point[0]);
 		
 		// Fill & sort collection of points by X coordinate. */
-		pointsSortedX.addAll(points);
-		Collections.sort(pointsSortedX, Point.xCoordComparator);
+		mergeSort(points, 0, points.length, Point.xCoordComparator);
+		for (int ix = 0; ix < points.length; ix++) {
+			pointsSortedX.add(points[ix]);
+		}
 		
 		// Fill & sort collection of points by Y coordinate. */
-		pointsSortedY.addAll(points);
-		Collections.sort(pointsSortedY, Point.yCoordComparator);
+		mergeSort(points, 0, points.length, Point.yCoordComparator);
+		for (int ix = 0; ix < points.length; ix++) {
+			pointsSortedY.add(points[ix]);
+		}
 	}
 
 	/** Read input file of points. */
@@ -34,16 +39,16 @@ public class ClosestPair {
 		List<Point> points = new LinkedList<Point>();
 		BufferedReader reader = null;
 		try {
+			// Open file into buffered reader.
 			reader = new BufferedReader(new FileReader(inputFileName));
 			
 			String row;
-			// Loop through & read the moves made on previous turns, store in array. 
+			// Loop through & read the points, store in list. 
 			while ((row = reader.readLine()) != null && row.trim().length() != 0) {
 				// Split line by any whitespace.
 				String[] split = row.split("\\s+");
 				points.add(new Point(Integer.parseInt(split[0]), Integer.parseInt(split[1])));
 			}
-			// Make sure number of input moves matches configured number.
 		} catch (FileNotFoundException e) {
 			System.out.println(inputFileName);
 			e.printStackTrace();
@@ -88,9 +93,11 @@ public class ClosestPair {
 		
 		// Check which side had closer points and check the middle stripe for closer points than the one from the side.
 		if (closestPairLeft[0].distanceTo(closestPairLeft[1]) < closestPairRight[0].distanceTo(closestPairRight[1])) {
+			// Left points closer, check the middle stripe for points closer than they.
 			return checkMiddleStripe(closestPairLeft, middleXCoordinate, subsetPointsSortedX, allPointsSortedY);
 		}
 		
+		// Right points closer, check the middle stripe for points closer than they.
 		return checkMiddleStripe(closestPairRight, middleXCoordinate, subsetPointsSortedX, allPointsSortedY);
 	}
 	
@@ -100,11 +107,13 @@ public class ClosestPair {
 		double closestDistance = closestPairSide[0].distanceTo(closestPairSide[1]);
 		Point[] closestPair = closestPairSide;
 		
-		// Find points in middle stripe.
+		// Determine left coordinate of stripe.
 		double startXRange = middleXCoordinate - closestDistance;
+		// Determine right coordinate of stripe.
 		double endXRange = middleXCoordinate + closestDistance;
 		List<Point> middlePointsSortedX = new ArrayList<Point>();
 		for (Point point : subsetPointsSortedX) {
+			// If within stripe, add to the list.
 			if (point.getxCoord() >= startXRange && point.getxCoord() <= endXRange) {
 				middlePointsSortedX.add(point);
 			}
@@ -113,7 +122,9 @@ public class ClosestPair {
 		// Use all points sorted by Y to build list of middle points sorted by Y.
 		List<Point> middlePointsSortedY = new ArrayList<Point>();
 		for (Point point : allPointsSortedY) {
+			// If in the stripe.
 			if (binarySearch(middlePointsSortedX, point)) {
+				// Add to list of middle points sorted by Y coord.
 				middlePointsSortedY.add(point);
 			}
 		}
@@ -191,6 +202,7 @@ public class ClosestPair {
 	/** Separates a list of points by whether it is on the left or right of median point. */
 	private static List<Point> separatePoints(Side side, List<Point> pointsSortedX) {
 		List<Point> result = new ArrayList<Point>();
+		// Calculate range of indexes with which to separate.
 		int middle = pointsSortedX.size() / 2;
 		int start, end;
 		if (side == Side.LEFT) {
@@ -202,11 +214,61 @@ public class ClosestPair {
 			end = pointsSortedX.size();
 		}
 		
+		// Loop through indexes, adding to result.
 		for (int ix = start; ix < end; ix++) {
 			result.add(pointsSortedX.get(ix));
 		}
 		
 		return result;
+	}
+	
+	/** Mergesort for points. Paramaterizized by comparator (for x & y coords). */
+	private static void mergeSort(Point[] points, int start, int end, Comparator<Point> comparator) {
+		if (start + 1 < end) {
+			// Determine middle index.
+			int middle = (start + end) / 2;
+			// Recurse left.
+			mergeSort(points, start, middle, comparator);
+			// Recurse right.
+			mergeSort(points, middle, end, comparator);
+			// Merge & sort the two sorted sides.
+			merge(points, start, middle, end, comparator);
+		}
+	}
+
+	/** Merge and sort left range with right range. */
+	private static void merge(Point[] pointsIn, int low, int middle, int high, Comparator<Point> comparator) {
+		// Allocate buffer to hold sorted points. 
+		int bufferLen = high - low;
+		Point[] points = new Point[bufferLen];
+		
+		// Move through both ranges & move the point with lower coordinate to buffer.
+		int ixOut = 0;
+		int ixLeft = low;
+		int ixRight = middle;
+		while (ixLeft < middle && ixRight < high) {
+			if (comparator.compare(pointsIn[ixLeft], pointsIn[ixRight]) <= 0) {
+				points[ixOut++] = pointsIn[ixLeft++];
+			}
+			else {
+				points[ixOut++] = pointsIn[ixRight++];
+			}
+		}
+		
+		// Copy remaining left side, if any.
+		while (ixLeft < middle) {
+			points[ixOut++] = pointsIn[ixLeft++];
+		}
+		
+		// Copy remaining right side, if any.
+		while (ixRight < high) {
+			points[ixOut++] = pointsIn[ixRight++];
+		}
+		
+		// Copy sorted buffer back to input array.
+		for (int ix = 0; ix < bufferLen; ix++) {
+			pointsIn[low + ix] = points[ix];
+		}
 	}
 	
 	/** Computes the closest pair of points. */
@@ -219,6 +281,7 @@ public class ClosestPair {
 	public static void main(String[] args) {
 		String inputFileName = null;
 		
+		// Process command line.
 		switch(args.length) {
 		case 1:
 			inputFileName = args[0];
