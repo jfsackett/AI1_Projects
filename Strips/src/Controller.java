@@ -11,7 +11,7 @@ import ai1.tower.ClearProposition;
 import ai1.tower.MoveAction;
 import ai1.tower.OnProposition;
 import ai1.tower.SmallerProposition;
-import ai1.tower.TowerOfHanoi;
+import ai1.tower.TowerOfHanoiPddl;
 
 public class Controller {
 
@@ -39,11 +39,20 @@ public class Controller {
 		initialState.add(ClearProposition.initClearProposition("B"));
 		initialState.add(ClearProposition.initClearProposition("C"));
 
+		// Goal propositions.
+		OnProposition diskOneOnProposition = OnProposition.initOnProposition("ONE", "TWO", 1);
+		OnProposition diskTwoOnProposition = OnProposition.initOnProposition("TWO", "THREE", 2);
+		OnProposition diskThreeOnProposition = OnProposition.initOnProposition("THREE", "B", 3);
+		// Goal propositions for heuristic.
+		List<Proposition> goalStateHeuristic = new ArrayList<Proposition>();
+		goalStateHeuristic.add(diskOneOnProposition);
+		goalStateHeuristic.add(diskTwoOnProposition);
+		goalStateHeuristic.add(diskThreeOnProposition);
 		// Goal state.
 		List<Proposition> goalState = new ArrayList<Proposition>();
-		goalState.add(OnProposition.initOnProposition("ONE", "TWO"));
-		goalState.add(OnProposition.initOnProposition("TWO", "THREE"));
-		goalState.add(OnProposition.initOnProposition("THREE", "B"));
+		goalState.add(diskOneOnProposition);
+		goalState.add(diskTwoOnProposition);
+		goalState.add(diskThreeOnProposition);
 		// Constant initial state.
 		goalState.add(SmallerProposition.initSmallerProposition("ONE", "A"));
 		goalState.add(SmallerProposition.initSmallerProposition("ONE", "B"));
@@ -66,7 +75,7 @@ public class Controller {
 		List<Action> actions = new ArrayList<Action>();
 		actions.add(MoveAction.initMoveAction());
 		
-		Pddl pddl = new TowerOfHanoi(initialState, goalState, actions);
+		Pddl pddl = new TowerOfHanoiPddl(initialState, goalState, actions, goalStateHeuristic);
 		Strips strips = new Strips(pddl);
 		List<String> solutionSteps = strips.solve();
 		for (String solutionStep : solutionSteps) {

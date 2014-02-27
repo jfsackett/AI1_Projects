@@ -18,10 +18,14 @@ public class KnowledgeBase extends Node {
 	/** Inbound action. */
 	private Action inboundAction;
 	
+	/** Heuristic cache value. Use carefully */
+	private int cacheCostEstimate = -1; 
+	
 	/** Constructor. */
 	public KnowledgeBase(List<Proposition> truePropositions, List<Action> actions) {
 		this.truePropositions = truePropositions;
 		this.actions = actions;
+		this.pathCost = 0;
 	}
 	
 	/** Copy Constructor. */
@@ -33,6 +37,7 @@ public class KnowledgeBase extends Node {
 		actions = knowledgeBase.actions;
 		this.inboundAction = inboundAction;
 		this.parentNode = knowledgeBase;
+		this.pathCost = parentNode.getPathCost() + 1;
 	}
 	
 	/** Return list of successor knowledge base nodes traversable to from this node. */
@@ -134,6 +139,18 @@ public class KnowledgeBase extends Node {
 	
 	public void remove(List<Proposition> propositions) {
 		truePropositions.removeAll(propositions);
+	}
+
+	public boolean isTrue(Proposition proposition) {
+		return truePropositions.contains(proposition);
+	}
+
+	public int getCacheCostEstimate() {
+		return cacheCostEstimate;
+	}
+
+	public void setCacheCostEstimate(int cacheCostEstimate) {
+		this.cacheCostEstimate = cacheCostEstimate;
 	}
 
 	@Override

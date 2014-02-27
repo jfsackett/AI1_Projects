@@ -2,6 +2,8 @@ package ai1.strips;
 
 import java.util.List;
 
+import ai1.search.HeuristicStrategy;
+
 public abstract class Pddl {
 
 	/** Initial state propositions. */
@@ -20,6 +22,8 @@ public abstract class Pddl {
 		this.actions = actions;
 	}
 
+	public abstract HeuristicStrategy getHeuristic(); 
+	
 	/** Accessor. */
 	public List<Proposition> getInitialState() {
 		return initialState;
@@ -34,6 +38,5 @@ public abstract class Pddl {
 	public List<Action> getActions() {
 		return actions;
 	}
-	
 	
 }
