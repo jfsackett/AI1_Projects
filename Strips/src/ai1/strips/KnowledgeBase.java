@@ -32,6 +32,7 @@ public class KnowledgeBase extends Node {
 		}
 		actions = knowledgeBase.actions;
 		this.inboundAction = inboundAction;
+		this.parentNode = knowledgeBase;
 	}
 	
 	/** Return list of successor knowledge base nodes traversable to from this node. */
@@ -60,10 +61,15 @@ public class KnowledgeBase extends Node {
 	/** Return action leading to this state. */
 	@Override
 	public String getAction() {
+		if (inboundAction == null) {
+			// Initial state.
+			return "Initial state.";
+		}
+		
 		return "" + inboundAction;
 	}
 
-	List<Map<String,Variable>> bindPropositionVariables(Proposition proposition) {
+	public List<Map<String,Variable>> bindPropositionVariables(Proposition proposition) {
 		// List of matching variable instance tuples.
 		List<Map<String,Variable>> matchingInstances = new ArrayList<Map<String,Variable>>();
 		boolean aPropositionMatches = false;
@@ -173,6 +179,22 @@ public class KnowledgeBase extends Node {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder result = new  StringBuilder();
+		result.append("KnowledgeBase [truePropositions=");
+		for (Proposition trueProposition : truePropositions) {
+			String propositionToString = "" + trueProposition;
+			if (propositionToString.length() == 0) {
+				continue;
+			}
+			result.append("\n\t").append(propositionToString);
+		}
+		result.append("]");
+		
+		return result.toString();
 	}
 	
 }

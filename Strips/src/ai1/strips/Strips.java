@@ -13,10 +13,6 @@ public class Strips {
 	/** Problem definition to solve. */
 	private Pddl pddl;
 	
-	/** Knowledge base representing curent state. */
-//	private KnowledgeBase initialKnowledgeBase;
-
-
 	/** Constructor. */
 	public Strips(Pddl pddl) {
 		this.pddl = pddl;
@@ -30,11 +26,16 @@ public class Strips {
 		SearchAgent searchAgent = new SearchAgent(new BreadthFirstSearchStrategy());
 		SearchResult searchResult = searchAgent.search(initialKnowledgeBase, goalKnowledgeBase);
 		
-		System.out.println("" + (searchResult.isSuccess() ? "Success" : "Failure"));
-		for (Node solutionNode : searchResult.getSolutionMoves()) {
-			System.out.println("" + solutionNode.getAction());
+		List<String> solutionSteps = new ArrayList<String>();
+		if (searchResult.isSuccess()) {
+			for (Node solutionNode : searchResult.getSolutionMoves()) {
+				solutionSteps.add(solutionNode.getAction());
+			}
+		}
+		else {
+			solutionSteps.add("Failure.");
 		}
 		
-		return new ArrayList<String>();
+		return solutionSteps;
 	}
 }

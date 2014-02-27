@@ -33,6 +33,10 @@ public class Variable {
 		this.value = value;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -62,6 +66,11 @@ public class Variable {
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return " Variable [name=" + name + ", value=" + value + "]";
 	}
 	
 }

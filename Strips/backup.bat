@@ -1,5 +1,7 @@
+copy C:\Users\Joe\git\AI1_Projects\Strips\src\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\strips\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\tower\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
+copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\coin\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\search\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\*.txt "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\*.docx "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"

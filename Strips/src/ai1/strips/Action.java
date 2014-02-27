@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Action {
+public abstract class Action implements Cloneable {
 
 	/** Name. */
 	private String name;
 	
 	/** Argument list. */
-	private List<Variable> variables;
+	protected List<Variable> variables;
 	
 	/** Precondition propositions. */
 	private List<Proposition> preConditions;
@@ -51,7 +51,7 @@ public abstract class Action {
 		}
 		
 		for (Map<String,Variable> matchingInstanceBinding : matchingInstanceBindings) {
-			KnowledgeBase knowledgeBase = new KnowledgeBase(knowledgeBaseIn, this);
+			KnowledgeBase knowledgeBase = new KnowledgeBase(knowledgeBaseIn, bindActionVariables(this, matchingInstanceBinding));
 			List<Proposition> boundRemovePropositions = bindPropositions(this.removePropositions, matchingInstanceBinding);
 			knowledgeBase.remove(boundRemovePropositions);
 			List<Proposition> boundAddPropositions = bindPropositions(this.addPropositions, matchingInstanceBinding);
@@ -101,12 +101,14 @@ public abstract class Action {
 			List<Map<String,Variable>> firstPreconditionBindings = remainingPreconditionBindings.get(0);
 			for (Map<String,Variable> currentPreconditionBinding : firstPreconditionBindings) {
 				boolean matchedBinding = true;
+				Map<String,Variable> currBindingInProgress = new HashMap<String,Variable>();
+				currBindingInProgress.putAll(bindingInProgress);
 				for (String currentVariableBindingKey : currentPreconditionBinding.keySet()) {
 					Variable currentVariableBinding = currentPreconditionBinding.get(currentVariableBindingKey);
-					Variable tupleVariableBinding = bindingInProgress.get(currentVariableBindingKey);
+					Variable tupleVariableBinding = currBindingInProgress.get(currentVariableBindingKey);
 					if (tupleVariableBinding == null) {
 						// No binding yet for this variable, add it.
-						bindingInProgress.put(currentVariableBindingKey, currentVariableBinding);
+						currBindingInProgress.put(currentVariableBindingKey, currentVariableBinding);
 					}
 					else {
 						// Check that bound values match.
@@ -118,7 +120,7 @@ public abstract class Action {
 					}
 				}
 				if (matchedBinding) {
-					matchingInstanceBindings.addAll(findMatchingInstanceBindings(bindingInProgress, remainingPreconditionBindings.subList(1, remainingPreconditionBindings.size())));
+					matchingInstanceBindings.addAll(findMatchingInstanceBindings(currBindingInProgress, remainingPreconditionBindings.subList(1, remainingPreconditionBindings.size())));
 				}
 			}
 		}
@@ -138,14 +140,14 @@ public abstract class Action {
 		return matchingInstanceBindings;
 	}
 	
-	/** Bind the add & remove propositions' variables with the instance bindings. */
-	private static List<Proposition> bindPropositions(List<Proposition> propositions, Map<String,Variable> matchingInstanceBindings) {
-		List<Proposition> boundPropositions = new ArrayList<Proposition>();
-		for (Proposition proposition : propositions) {
-			Proposition boundProposition = new Proposition(proposition);
-			for (Variable variable : boundProposition.getVariables()) {
+	/** Bind an action's variables. */
+	private static Action bindActionVariables(Action bindAction, Map<String,Variable> matchingInstanceBindings) {
+		Action boundAction = null;
+		try {
+			boundAction = (Action) bindAction.clone();
+			for (Variable variable : boundAction.variables) {
 				String variableName = variable.getName();
-				if ( variableName == null) {
+				if (variableName == null) {
 					// Can only bind variables with name. 
 					continue;
 				}
@@ -154,18 +156,68 @@ public abstract class Action {
 					System.out.println("Variable Binding Error. No matching instance binding.");
 					continue;
 				}
-				// Bind the proposition's variable.
+				// Bind the variable's value.
 				variable.setValue(matchingInstanceBinding.getValue());
+			}			
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		return boundAction;
+	}
+	
+	/** Bind the add & remove propositions' variables with the instance bindings. */
+	private static List<Proposition> bindPropositions(List<Proposition> propositions, Map<String,Variable> matchingInstanceBindings) {
+		List<Proposition> boundPropositions = new ArrayList<Proposition>();
+		for (Proposition proposition : propositions) {
+			try {
+				Proposition boundProposition = (Proposition) proposition.clone();
+				boundPropositions.add(boundProposition);
+				for (Variable variable : boundProposition.getVariables()) {
+					String variableName = variable.getName();
+					if (variableName == null) {
+						// Can only bind variables with name. 
+						continue;
+					}
+					Variable matchingInstanceBinding = matchingInstanceBindings.get(variableName);
+					if (matchingInstanceBinding == null) {
+						System.out.println("Variable Binding Error. No matching instance binding.");
+						continue;
+					}
+					// Bind the variable's value.
+					variable.setValue(matchingInstanceBinding.getValue());
+					// Clear the variable's variable name.
+					variable.setName(null);
+				}
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
 			}
 		}
 		
 		return boundPropositions;
 	}
 
+	/** Clone. */
 	@Override
-	public String toString() {
-		return "" + name;
+	protected Object clone() throws CloneNotSupportedException {
+		Action clone = (Action) super.clone();
+		clone.variables = new ArrayList<Variable>();
+		for (Variable variable : variables) {
+			clone.variables.add(new Variable(variable));
+		}
+		return clone;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder result = new  StringBuilder();
+		result.append("Action [name=").append(name).append(", variables=");
+		for (Variable variable : variables) {
+			result.append(variable);
+		}
+		result.append("]");
+		
+		return result.toString();
+	}
 	
 }

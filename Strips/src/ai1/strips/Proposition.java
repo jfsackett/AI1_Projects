@@ -3,7 +3,7 @@ package ai1.strips;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Proposition {
+public class Proposition implements Cloneable {
 
 	/** Proposition name. */
 	protected String name;
@@ -11,20 +11,14 @@ public class Proposition {
 	/** Proposition variables. */
 	protected List<Variable> variables;
 	
+	public Proposition() {
+	}
+
 	public Proposition(String name, List<Variable> variables) {
 		this.name = name;
 		this.variables = variables;
 	}
 
-	/** Copy Constructor. */
-	public Proposition(Proposition proposition) {
-		this.name = proposition.name;
-		this.variables = new ArrayList<Variable>();
-		for (Variable variable : proposition.variables) {
-			this.variables.add(new Variable(variable));
-		}
-	}
-	
 	@Override
 	public int hashCode() {
 		int result = 31 + ((name == null) ? 0 : name.hashCode());
@@ -64,12 +58,34 @@ public class Proposition {
 		return true;
 	}
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Proposition clone = (Proposition) super.clone();
+		clone.variables = new ArrayList<Variable>();
+		for (Variable variable : variables) {
+			clone.variables.add(new Variable(variable));
+		}
+		return clone;
+	}
+	
 	public String getName() {
 		return name;
 	}
 
 	public List<Variable> getVariables() {
 		return variables;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new  StringBuilder();
+		result.append("Proposition [name=").append(name).append(", variables=");
+		for (Variable variable : variables) {
+			result.append(variable);
+		}
+		result.append("]");
+		
+		return result.toString();
 	}
 
 }
