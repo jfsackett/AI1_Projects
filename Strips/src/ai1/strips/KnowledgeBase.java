@@ -7,6 +7,7 @@ import java.util.Map;
 
 import ai1.search.Node;
 
+/** Represents the know state of predicates; extends search node so graphs of them are searchable. */
 public class KnowledgeBase extends Node {
 
 	/** True propositions. */
@@ -178,7 +179,6 @@ public class KnowledgeBase extends Node {
 			if (other.truePropositions != null)
 				return false;
 		}
-		//TODO Make this more efficient.
 		else {
 			List<Proposition> testPropositions = new ArrayList<Proposition>();
 			// Test for complete subset, other to this.

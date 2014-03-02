@@ -8,8 +8,8 @@ import ai1.strips.Variable;
 
 public class OnProposition extends Proposition {
 
-	/** Cost estimate of the number of moves to make this proposition true. */ 
-	private int costEstimate = 0;
+	/** Weight of the disk in this proposition for calculating heuristic value. */ 
+	private int weight = 0;
 	
 	public static OnProposition initOnProposition(String topValue, String bottomValue) {
 		List<Variable> variables = new ArrayList<Variable>();
@@ -18,11 +18,11 @@ public class OnProposition extends Proposition {
 		return new OnProposition(variables);
 	}
 	
-	public static OnProposition initOnProposition(String topValue, String bottomValue, int costEstimate) {
+	public static OnProposition initOnProposition(String topValue, String bottomValue, int weight) {
 		List<Variable> variables = new ArrayList<Variable>();
 		variables.add(new Variable(null, topValue));
 		variables.add(new Variable(null, bottomValue));
-		return new OnProposition(variables, costEstimate);
+		return new OnProposition(variables, weight);
 	}
 	
 	public static OnProposition initOnPropositionVariable(String topName, String bottomName) {
@@ -36,9 +36,9 @@ public class OnProposition extends Proposition {
 		super("ON", variables);
 	}
 
-	public OnProposition(List<Variable> variables, int costEstimate) {
+	public OnProposition(List<Variable> variables, int weight) {
 		super("ON", variables);
-		this.costEstimate = costEstimate;
+		this.weight = weight;
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public class OnProposition extends Proposition {
 		return (OnProposition) super.clone();
 	}
 
-	public int getCostEstimate() {
-		return costEstimate;
+	public int getWeight() {
+		return weight;
 	}
 	
 }

@@ -31,6 +31,7 @@ public class TowerOfHanoiPddl extends Pddl {
 			this.goalState = goalState;
 		}
 
+		/** Heuristic for estimating the number of moves to goal state; weight of disks out of place. */
 		public int estimateCost(Node node) {
 			// Safe cast.
 			KnowledgeBase knowledgeBase = (KnowledgeBase) node;
@@ -43,7 +44,7 @@ public class TowerOfHanoiPddl extends Pddl {
 					if (proposition.getClass().equals(OnProposition.class)) {
 						OnProposition onProposition = (OnProposition) proposition;
 						if (!knowledgeBase.isTrue(onProposition)) {
-							estimate += onProposition.getCostEstimate();
+							estimate += onProposition.getWeight();
 						}
 					}
 				}
