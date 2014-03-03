@@ -3,6 +3,7 @@ copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\strips\*.java "C:\Users\Joe\Go
 copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\tower\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\shakey\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\key\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
+copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\cargo\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\src\ai1\search\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\*.txt "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"
 copy C:\Users\Joe\git\AI1_Projects\Strips\*.docx "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment3\source"

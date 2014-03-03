@@ -6,6 +6,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import ai1.cargo.AirCargoPddl;
+import ai1.cargo.AirportProposition;
+import ai1.cargo.AtAirportProposition;
+import ai1.cargo.CargoProposition;
+import ai1.cargo.FlyAction;
+import ai1.cargo.LoadAction;
+import ai1.cargo.PlaneProposition;
+import ai1.cargo.UnloadAction;
 import ai1.key.GraspKeyAction;
 import ai1.key.KeyInBoxAction;
 import ai1.key.KeyInBoxPddl;
@@ -51,6 +59,10 @@ public class Controller {
 			case 'c':
 			case 'C':
 				problemPddl = buildKeyInBoxPddl();
+				break;
+			case 'd':
+			case 'D':
+				problemPddl = buildAirCargoPddl();
 				break;
 			default:
 				System.exit(0);
@@ -234,13 +246,13 @@ public class Controller {
 	}
 	
 	private static Pddl buildKeyInBoxPddl() {
-		// Initial state of Key in Box.
+		// Initial state of Air Cargo.
 		List<Proposition> initialState = new ArrayList<Proposition>();
 		initialState.add(ai1.key.InProposition.initInProposition("Robot", "Room2"));
 		initialState.add(ai1.key.InProposition.initInProposition("Key", "Room2"));
 		initialState.add(UnlockedProposition.initUnlockedProposition("Door"));
 
-		// Goal static state of Key in Box.
+		// Goal static state of Air Cargo.
 		List<Proposition> goalState = new ArrayList<Proposition>();
 		goalState.add(ai1.key.InProposition.initInProposition("Robot", "Room1"));
 		goalState.add(ai1.key.InProposition.initInProposition("Key", "Box"));
@@ -254,5 +266,41 @@ public class Controller {
 		actions.add(MoveKeyAction.initMoveKeyAction());
 		
 		return new KeyInBoxPddl(initialState, goalState, actions);
+	}
+	
+	private static Pddl buildAirCargoPddl() {
+		// Initial state of Air Cargo.
+		List<Proposition> initialState = new ArrayList<Proposition>();
+		initialState.add(AtAirportProposition.initAtAirportProposition("Cargo1", "SFO"));
+		initialState.add(AtAirportProposition.initAtAirportProposition("Cargo2", "JFK"));
+		initialState.add(AtAirportProposition.initAtAirportProposition("Plane1", "SFO"));
+		initialState.add(AtAirportProposition.initAtAirportProposition("Plane2", "JFK"));
+		initialState.add(CargoProposition.initCargoProposition("Cargo1"));
+		initialState.add(CargoProposition.initCargoProposition("Cargo2"));
+		initialState.add(PlaneProposition.initPlaneProposition("Plane1"));
+		initialState.add(PlaneProposition.initPlaneProposition("Plane2"));
+		initialState.add(AirportProposition.initAirportProposition("JFK"));
+		initialState.add(AirportProposition.initAirportProposition("SFO"));
+
+		// Goal static state of Air Cargo.
+		List<Proposition> goalState = new ArrayList<Proposition>();
+		goalState.add(AtAirportProposition.initAtAirportProposition("Cargo1", "JFK"));
+		goalState.add(AtAirportProposition.initAtAirportProposition("Cargo2", "SFO"));
+		goalState.add(AtAirportProposition.initAtAirportProposition("Plane1", "SFO"));
+		goalState.add(AtAirportProposition.initAtAirportProposition("Plane2", "JFK"));
+		goalState.add(CargoProposition.initCargoProposition("Cargo1"));
+		goalState.add(CargoProposition.initCargoProposition("Cargo2"));
+		goalState.add(PlaneProposition.initPlaneProposition("Plane1"));
+		goalState.add(PlaneProposition.initPlaneProposition("Plane2"));
+		goalState.add(AirportProposition.initAirportProposition("JFK"));
+		goalState.add(AirportProposition.initAirportProposition("SFO"));
+
+		// Actions.
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(FlyAction.initFlyAction());
+		actions.add(LoadAction.initLoadAction());
+		actions.add(UnloadAction.initUnloadAction());
+		
+		return new AirCargoPddl(initialState, goalState, actions);
 	}
 }
