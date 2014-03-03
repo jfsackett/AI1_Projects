@@ -6,6 +6,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import ai1.key.GraspKeyAction;
+import ai1.key.KeyInBoxAction;
+import ai1.key.KeyInBoxPddl;
+import ai1.key.LockDoorAction;
+import ai1.key.LockedProposition;
+import ai1.key.MoveKeyAction;
+import ai1.key.UnlockedProposition;
 import ai1.shakey.AtProposition;
 import ai1.shakey.BoxProposition;
 import ai1.shakey.GoAction;
@@ -40,6 +47,10 @@ public class Controller {
 			case 'b':
 			case 'B':
 				problemPddl = buildShakeysWorldPddl();
+				break;
+			case 'c':
+			case 'C':
+				problemPddl = buildKeyInBoxPddl();
 				break;
 			default:
 				System.exit(0);
@@ -222,4 +233,26 @@ public class Controller {
 		return new ShakeysWorldPddl(initialState, goalState, actions);
 	}
 	
+	private static Pddl buildKeyInBoxPddl() {
+		// Initial state of Key in Box.
+		List<Proposition> initialState = new ArrayList<Proposition>();
+		initialState.add(ai1.key.InProposition.initInProposition("Robot", "Room2"));
+		initialState.add(ai1.key.InProposition.initInProposition("Key", "Room2"));
+		initialState.add(UnlockedProposition.initUnlockedProposition("Door"));
+
+		// Goal static state of Key in Box.
+		List<Proposition> goalState = new ArrayList<Proposition>();
+		goalState.add(ai1.key.InProposition.initInProposition("Robot", "Room1"));
+		goalState.add(ai1.key.InProposition.initInProposition("Key", "Box"));
+		goalState.add(LockedProposition.initLockedProposition("Door"));
+
+		// Actions.
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(GraspKeyAction.initGraspKeyAction());
+		actions.add(KeyInBoxAction.initKeyInBoxAction());
+		actions.add(LockDoorAction.initLockDoorAction());
+		actions.add(MoveKeyAction.initMoveKeyAction());
+		
+		return new KeyInBoxPddl(initialState, goalState, actions);
+	}
 }
