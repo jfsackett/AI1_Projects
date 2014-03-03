@@ -1,0 +1,91 @@
+> java Controller
+A) Tower of Hanoi
+B) Shakey's World 
+C) Key-In-Box
+D) Air cargo transport
+E) Exit
+A
+Enter height (1-9) of the tower:
+5
+Success:
+Initial state.
+Move Disk: 1  From: 2  To: B
+Move Disk: 2  From: 3  To: C
+Move Disk: 1  From: B  To: 2
+Move Disk: 3  From: 4  To: B
+Move Disk: 1  From: 2  To: 4
+Move Disk: 2  From: C  To: 3
+Move Disk: 1  From: 4  To: 2
+Move Disk: 4  From: 5  To: C
+Move Disk: 1  From: 2  To: 4
+Move Disk: 2  From: 3  To: 5
+Move Disk: 1  From: 4  To: 2
+Move Disk: 3  From: B  To: 4
+Move Disk: 1  From: 2  To: B
+Move Disk: 2  From: 5  To: 3
+Move Disk: 1  From: B  To: 2
+Move Disk: 5  From: A  To: B
+Move Disk: 1  From: 2  To: A
+Move Disk: 2  From: 3  To: 5
+Move Disk: 1  From: A  To: 2
+Move Disk: 3  From: 4  To: A
+Move Disk: 1  From: 2  To: 4
+Move Disk: 2  From: 5  To: 3
+Move Disk: 1  From: 4  To: 2
+Move Disk: 4  From: C  To: 5
+Move Disk: 1  From: 2  To: 4
+Move Disk: 2  From: 3  To: C
+Move Disk: 1  From: 4  To: 2
+Move Disk: 3  From: A  To: 4
+Move Disk: 1  From: 2  To: A
+Move Disk: 2  From: C  To: 3
+Move Disk: 1  From: A  To: 2
+
+
+> java Controller
+A) Tower of Hanoi
+B) Shakey's World 
+C) Key-In-Box
+D) Air cargo transport
+E) Exit
+B
+Success:
+Initial state.
+Shakey goes from: Room3  to: Door3
+Shakey goes from: Door3  to: Door1
+Shakey goes from: Door1  to: Room1
+Shakey pushes box: Box2  from: Room1  to: Door1
+Shakey pushes box: Box2  from: Door1  to: Door2
+Shakey pushes box: Box2  from: Door2  to: Room2
+
+
+> java Controller
+A) Tower of Hanoi
+B) Shakey's World 
+C) Key-In-Box
+D) Air cargo transport
+E) Exit
+C
+Success:
+Initial state.
+Grasp Key
+Move Key
+Lock Door
+Put Key In Box
+
+
+> java Controller
+A) Tower of Hanoi
+B) Shakey's World 
+C) Key-In-Box
+D) Air cargo transport
+E) Exit
+D
+Success:
+Initial state.
+Load: Cargo1  on: Plane1  at: SFO
+Fly: Plane1  from: SFO  to: JFK
+Load: Cargo2  on: Plane1  at: JFK
+Unload: Cargo1  from: Plane1  at: JFK
+Fly: Plane1  from: JFK  to: SFO
+Unload: Cargo2  from: Plane1  at: SFO
