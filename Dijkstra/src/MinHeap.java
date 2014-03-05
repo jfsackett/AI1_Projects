@@ -25,6 +25,11 @@ public class MinHeap {
 		indexMap = new HashMap<VertexNode,Integer>();
 	}
 	
+	/** Returns flag indicating whether or not the heap is empty. */
+	public boolean isEmpty() {
+		return size == 0;
+	}
+	
 	/** Insert node into minheap. */
 	public void insert(VertexNode node) {
 		if (size == capacity) {
@@ -37,8 +42,6 @@ public class MinHeap {
 		indexMap.put(node, size);
 		bubbleUp(size);
 		size++;
-		//TODO Remove for release.
-		validate();
 	}
 	
 	/** Extract minimum node from minheap. */
@@ -53,8 +56,6 @@ public class MinHeap {
 		}
 		swap(0, size);
 		bubbleDown(0);
-		//TODO Remove for release.
-		validate();
 		
 		return currNode;
 	}
@@ -77,8 +78,6 @@ public class MinHeap {
 		else {
 			bubbleDown(heapNodeIx);			
 		}
-		//TODO Remove for release.
-		validate();
 	}
 	
 	/** Recursively bubble the indexed node up until less than parent. */
@@ -141,7 +140,8 @@ public class MinHeap {
 		indexMap.put(currNode, ix2);
 	}
 	
-	/** Validates state of heap for testing. */
+	/** Validates state of heap - testing only. */
+	@SuppressWarnings("unused")
 	private boolean validate() {
 		for (int ix = size - 1; ix > 0; ix--) {
 			if (elements.get(ix).getDistance() < elements.get((ix-1)/2).getDistance()) {

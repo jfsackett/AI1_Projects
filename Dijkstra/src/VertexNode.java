@@ -1,24 +1,38 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /** Represents a node in the graph. */
 public class VertexNode {
 
-	/** Vertex. */
+	/** Vertex Id. */
 	String vertexId;
+	
+	/** Parent node through which distance calculated. */
+	VertexNode parentNode;
 	
 	/** Distance from start. */
 	int distance;
-
-	public VertexNode(String vertexId, int distance) {
-		this.vertexId = vertexId;
-		this.distance = distance;
-	}
+	
+	/** List of neighbor nodes with distances to them. */
+	List<NeighborNode> neighborNodes;
 
 	public VertexNode(String vertexId) {
 		this.vertexId = vertexId;
 		this.distance = Integer.MAX_VALUE;
+		this.parentNode = null;
+		this.neighborNodes = new ArrayList<NeighborNode>();
 	}
 
 	public String getVertexId() {
 		return vertexId;
+	}
+
+	public VertexNode getParentNode() {
+		return parentNode;
+	}
+
+	public void setParentNode(VertexNode parentNode) {
+		this.parentNode = parentNode;
 	}
 
 	public int getDistance() {
@@ -27,6 +41,10 @@ public class VertexNode {
 
 	public void setDistance(int distance) {
 		this.distance = distance;
+	}
+
+	public List<NeighborNode> getNeighborNodes() {
+		return neighborNodes;
 	}
 
 	@Override
@@ -57,8 +75,7 @@ public class VertexNode {
 
 	@Override
 	public String toString() {
-		return "VertexNode [vertexId=" + vertexId + ", distance=" + distance
-				+ "]";
+		return "VertexNode [vertexId=" + vertexId + ", distance=" + distance + "]";
 	}
 	
 }
