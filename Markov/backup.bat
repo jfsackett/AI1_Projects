@@ -1,0 +1,5 @@
+copy C:\Users\Joe\git\AI1_Projects\Markov\src\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment4\source"
+copy C:\Users\Joe\git\AI1_Projects\Markov\src\ai1\markov\*.java "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment4\source"
+copy C:\Users\Joe\git\AI1_Projects\Markov\*.txt "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment4\source"
+copy C:\Users\Joe\git\AI1_Projects\Markov\*.docx "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment4\source"
+copy C:\Users\Joe\git\AI1_Projects\Markov\*.bat "C:\Users\Joe\Google Drive\School\Courses\AI1-480\Assignment4\source"
